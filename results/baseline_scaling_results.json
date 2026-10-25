@@ -1,0 +1,113 @@
+{
+  "model_meta": {
+    "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+    "device": "mps",
+    "dtype": "torch.float16",
+    "num_layers": 28,
+    "num_kv_heads": 2,
+    "head_dim": 128,
+    "max_context_length": 32768,
+    "param_count": 1543714304,
+    "static_weights_mib": 2944.4,
+    "load_duration_sec": 2.39
+  },
+  "verification_result": {
+    "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+    "device": "mps",
+    "input_tokens": 52,
+    "generated_tokens": 30,
+    "total_tokens": 82,
+    "output_text": " The Project Code is ALPHA-9042 and the Assigned Database Port is 5432. The deployment target is Kubernetes US-East and",
+    "timings": {
+      "prefill_time_ms": 813.7,
+      "decode_time_ms": 1295.87,
+      "total_time_ms": 2109.57,
+      "ttft_ms": 813.7,
+      "decode_tokens_per_sec": 23.15
+    },
+    "memory": {
+      "kv_cache_bytes": 2322432,
+      "kv_cache_mib": 2.2148,
+      "theoretical_kv_bytes": 2322432,
+      "theoretical_kv_mib": 2.2148,
+      "kv_scaling_match_pct": 100.0,
+      "peak_process_rss_mib": 4902.42,
+      "peak_device_allocated_mib": 2986.53
+    },
+    "checkpoints": {
+      "inference_start": {
+        "name": "inference_start",
+        "timestamp": 1792412384.5946,
+        "process_rss_mib": 243.48,
+        "peak_rss_mib": 4902.42,
+        "device_allocated_mib": 2968.78,
+        "device_driver_mib": 3152.45,
+        "kv_cache_mib": 0.0
+      },
+      "post_prefill": {
+        "name": "post_prefill",
+        "timestamp": 1792412385.4084,
+        "process_rss_mib": 369.33,
+        "peak_rss_mib": 4902.42,
+        "device_allocated_mib": 2985.45,
+        "device_driver_mib": 3160.69,
+        "kv_cache_mib": 1.4219
+      },
+      "post_decoding": {
+        "name": "post_decoding",
+        "timestamp": 1792412386.7135,
+        "process_rss_mib": 372.67,
+        "peak_rss_mib": 4902.42,
+        "device_allocated_mib": 2986.53,
+        "device_driver_mib": 3160.69,
+        "kv_cache_mib": 2.2148
+      }
+    }
+  },
+  "scaling_suite": [
+    {
+      "target_len": 512,
+      "actual_input_tokens": 461,
+      "total_tokens": 466,
+      "kv_cache_mib": 12.71484375,
+      "theoretical_kv_mib": 12.71484375,
+      "prefill_time_ms": 683.9002090055146,
+      "decode_tokens_per_sec": 36.3570590399207,
+      "peak_process_rss_mib": 4902.421875,
+      "peak_device_allocated_mib": 3117.7890625
+    },
+    {
+      "target_len": 1024,
+      "actual_input_tokens": 931,
+      "total_tokens": 936,
+      "kv_cache_mib": 25.56640625,
+      "theoretical_kv_mib": 25.56640625,
+      "prefill_time_ms": 309.70899999374524,
+      "decode_tokens_per_sec": 36.2370483629922,
+      "peak_process_rss_mib": 4902.421875,
+      "peak_device_allocated_mib": 3266.64794921875
+    },
+    {
+      "target_len": 2048,
+      "actual_input_tokens": 1861,
+      "total_tokens": 1866,
+      "kv_cache_mib": 50.99609375,
+      "theoretical_kv_mib": 50.99609375,
+      "prefill_time_ms": 614.2252499994356,
+      "decode_tokens_per_sec": 28.93322482553194,
+      "peak_process_rss_mib": 4902.421875,
+      "peak_device_allocated_mib": 3564.091796875
+    },
+    {
+      "target_len": 4096,
+      "actual_input_tokens": 3721,
+      "total_tokens": 3726,
+      "kv_cache_mib": 101.85546875,
+      "theoretical_kv_mib": 101.85546875,
+      "prefill_time_ms": 1282.6493750035297,
+      "decode_tokens_per_sec": 30.72441245513189,
+      "peak_process_rss_mib": 4902.421875,
+      "peak_device_allocated_mib": 4162.0302734375
+    }
+  ]
+}

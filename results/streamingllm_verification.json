@@ -1,0 +1,65 @@
+{
+  "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+  "device": "mps",
+  "policy": "StreamingLLM (Attention Sinks + Rolling Window)",
+  "sink_tokens": 4,
+  "window_tokens": 256,
+  "cache_budget_tokens": 260,
+  "input_tokens": 1022,
+  "generated_tokens": 30,
+  "actual_cached_tokens": 260,
+  "output_text": " 7669\n\nTo determine the designated primary database port for project PROJ-5140, we need to follow these steps:\n\n",
+  "timings": {
+    "prefill_time_ms": 1111.28,
+    "decode_time_ms": 1319.86,
+    "total_time_ms": 2431.14,
+    "ttft_ms": 1111.28,
+    "decode_tokens_per_sec": 22.73
+  },
+  "memory": {
+    "uncompressed_kv_bytes": 30134272,
+    "compressed_kv_bytes": 7454720,
+    "compressed_kv_mib": 7.1094,
+    "kv_cache_savings_pct": 75.26,
+    "peak_process_rss_mib": 5415.88,
+    "peak_device_allocated_mib": 3280.19
+  },
+  "checkpoints": {
+    "inference_start": {
+      "name": "inference_start",
+      "timestamp": 1792413012.6573,
+      "process_rss_mib": 252.53,
+      "peak_rss_mib": 5415.88,
+      "device_allocated_mib": 2968.79,
+      "device_driver_mib": 3152.45,
+      "kv_cache_mib": 0.0
+    },
+    "peak_prefill_raw": {
+      "name": "peak_prefill_raw",
+      "timestamp": 1792413013.7688,
+      "process_rss_mib": 376.73,
+      "peak_rss_mib": 5415.88,
+      "device_allocated_mib": 3300.74,
+      "device_driver_mib": 4208.69,
+      "kv_cache_mib": 27.9453
+    },
+    "post_prefill_pruned": {
+      "name": "post_prefill_pruned",
+      "timestamp": 1792413013.7693,
+      "process_rss_mib": 376.83,
+      "peak_rss_mib": 5415.88,
+      "device_allocated_mib": 3279.9,
+      "device_driver_mib": 4208.69,
+      "kv_cache_mib": 7.1094
+    },
+    "post_decoding": {
+      "name": "post_decoding",
+      "timestamp": 1792413015.1026,
+      "process_rss_mib": 379.97,
+      "peak_rss_mib": 5415.88,
+      "device_allocated_mib": 3280.19,
+      "device_driver_mib": 4208.69,
+      "kv_cache_mib": 7.1094
+    }
+  }
+}

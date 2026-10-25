@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KV-Cache Compression Demonstration & Benchmark Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-badge">
+          <span class="logo-icon">⚡</span>
+          <div class="logo-text">
+            <h1>KV-Cache Squeeze</h1>
+            <span class="subtext">Long-Context Inference with Extreme Memory Compression</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-center">
+        <nav class="mode-tabs">
+          <button id="tab-interactive" class="tab-btn active" onclick="switchMode('interactive')">
+            <span class="tab-icon">🎮</span> Mode A: Interactive Inference
+          </button>
+          <button id="tab-dashboard" class="tab-btn" onclick="switchMode('dashboard')">
+            <span class="tab-icon">📊</span> Mode B: Benchmark Dashboard
+          </button>
+        </nav>
+      </div>
+      <div class="header-right">
+        <div class="hardware-pill">
+          <span class="status-dot online"></span>
+          <span class="hw-text">Device: Apple Silicon (MPS / Unified RAM)</span>
+        </div>
+        <div class="model-pill">
+          <span class="model-name">Qwen2.5-1.5B-Instruct</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- MODE A: INTERACTIVE DEMONSTRATION -->
+      <section id="interactive-mode" class="mode-panel active">
+        <div class="panel-layout">
+          <!-- Left Column: Controls & Input -->
+          <div class="panel-col config-col">
+            <div class="card glass-card">
+              <div class="card-header">
+                <h2>1. Configuration & Engine Selection</h2>
+                <span class="badge badge-accent">Real Inference Backend</span>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="method-select">Compression Method:</label>
+                  <select id="method-select" class="form-control" onchange="onMethodChange()">
+                    <optgroup label="Active Implemented Engines">
+                      <option value="full_baseline">Full Uncompressed Baseline (B = L)</option>
+                      <option value="streaming_llm" selected>StreamingLLM (Sinks + Recent Window)</option>
+                      <option value="sliding_window">Pure Sliding Window (Recent Only, S=0)</option>
+                      <option value="h2o">H2O Heavy-Hitter Cache (Global Attention Oracle)</option>
+                      <option value="ogc_cache">OGC-Cache (Observation-Guided Chunked - Phase 8)</option>
+                    </optgroup>
+                    <optgroup label="Unavailable / Theoretical Baselines">
+                      <option value="awq_4bit" disabled>[Unavailable] 4-bit KV Cache Quantization (Requires specialized C++ kernel)</option>
+                      <option value="lococo" disabled>[Unavailable] LoCoCo Low-Rank Cache (Unsupported)</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                <div id="dynamic-params" class="params-grid">
+                  <div class="form-group">
+                    <label for="budget-input">Total Budget (tokens):</label>
+                    <input type="number" id="budget-input" class="form-control" value="260" min="32" max="4096" step="16" oninput="updateParamBadges()">
+                    <span class="param-hint">Equivalent physical cache: <strong id="budget-mib">7.11 MiB</strong></span>
+                  </div>
+
+                  <div class="form-group" id="group-sinks">
+                    <label for="sinks-input">Attention Sinks ($S$):</label>
+                    <input type="number" id="sinks-input" class="form-control" value="4" min="0" max="64" step="1" oninput="updateParamBadges()">
+                  </div>
+
+                  <div class="form-group" id="group-window">
+                    <label for="window-input">Recent Window ($W$):</label>
+                    <input type="number" id="window-input" class="form-control" value="192" min="16" max="2048" step="16" oninput="updateParamBadges()">
+                  </div>
+
+                  <div class="form-group" id="group-chunk">
+                    <label for="chunk-input">Chunk Size ($C$):</label>
+                    <input type="number" id="chunk-input" class="form-control" value="64" min="16" max="256" step="16" oninput="updateParamBadges()">
+                  </div>
+                </div>
+
+                <div class="preset-selector">
+                  <label for="preset-select">Load Benchmark Preset Document:</label>
+                  <div class="preset-row">
+                    <select id="preset-select" class="form-control">
+                      <option value="" disabled selected>Select long-context preset...</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadSelectedPreset()">Load</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card glass-card">
+              <div class="card-header">
+                <h2>2. Document & Query Input</h2>
+                <span id="doc-token-badge" class="badge badge-info">Tokens: 0</span>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="document-input">Context Document (Markdown / Text):</label>
+                  <textarea id="document-input" class="form-control text-area" rows="8" placeholder="Paste long document or load a preset above..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="question-input">Inquiry / Question:</label>
+                  <input type="text" id="question-input" class="form-control" placeholder="e.g. What is the primary database port for project PROJ-4013?">
+                </div>
+
+                <div class="action-row">
+                  <button id="run-btn" class="btn btn-primary btn-large" onclick="executeInference()">
+                    <span class="btn-icon">⚡</span> Run Compressed Inference
+                  </button>
+                  <button class="btn btn-secondary" onclick="clearInputs()">Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Results & Live Telemetry -->
+          <div class="panel-col results-col">
+            <div class="card glass-card">
+              <div class="card-header">
+                <h2>Generated Model Output</h2>
+                <span id="exec-status" class="badge badge-success">Ready</span>
+              </div>
+              <div class="card-body">
+                <div id="output-box" class="output-box">
+                  <div class="placeholder-text">Awaiting inference run. Output will appear here along with verified ground-truth scoring.</div>
+                </div>
+                <div id="ground-truth-box" class="ground-truth-box hidden">
+                  <span class="gt-label">Benchmark Ground Truth:</span>
+                  <span id="gt-value" class="gt-value"></span>
+                  <span id="match-badge" class="badge"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card glass-card">
+              <div class="card-header">
+                <h2>Observed Physical Telemetry & Memory Savings</h2>
+                <span class="badge badge-warning">Actual Runtime Measurements</span>
+              </div>
+              <div class="card-body">
+                <div class="kpi-grid">
+                  <div class="kpi-card">
+                    <span class="kpi-title">KV Cache Memory</span>
+                    <span id="kpi-kv-mem" class="kpi-value">—</span>
+                    <span id="kpi-kv-sub" class="kpi-subtext">Uncompressed: —</span>
+                  </div>
+                  <div class="kpi-card highlight-card">
+                    <span class="kpi-title">KV Memory Savings</span>
+                    <span id="kpi-savings" class="kpi-value text-success">—</span>
+                    <span id="kpi-savings-sub" class="kpi-subtext">Physical reduction</span>
+                  </div>
+                  <div class="kpi-card">
+                    <span class="kpi-title">Prefill Latency</span>
+                    <span id="kpi-prefill" class="kpi-value">—</span>
+                    <span id="kpi-prefill-sub" class="kpi-subtext">Prompt execution</span>
+                  </div>
+                  <div class="kpi-card">
+                    <span class="kpi-title">Decode Throughput</span>
+                    <span id="kpi-decode" class="kpi-value">—</span>
+                    <span id="kpi-decode-sub" class="kpi-subtext">Autoregressive TPS</span>
+                  </div>
+                </div>
+
+                <div class="memory-bar-section">
+                  <div class="bar-header">
+                    <span>Physical KV-Cache Tensor Size vs Full Baseline</span>
+                    <span id="bar-percentage">0%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div id="memory-progress-bar" class="progress-bar" style="width: 100%;"></div>
+                  </div>
+                </div>
+
+                <div class="telemetry-details">
+                  <h3>Detailed Telemetry Breakdown</h3>
+                  <table class="telemetry-table">
+                    <tbody>
+                      <tr>
+                        <td>Input Prompt Tokens:</td>
+                        <td id="t-input-tokens" class="text-mono">—</td>
+                      </tr>
+                      <tr>
+                        <td>Retained Cache Tokens:</td>
+                        <td id="t-retained-tokens" class="text-mono">—</td>
+                      </tr>
+                      <tr>
+                        <td>Observed Physical Cache Bytes:</td>
+                        <td id="t-actual-bytes" class="text-mono">—</td>
+                      </tr>
+                      <tr>
+                        <td>Theoretical Formula Bytes:</td>
+                        <td id="t-formula-bytes" class="text-mono">—</td>
+                      </tr>
+                      <tr>
+                        <td>Peak Device Memory Allocated:</td>
+                        <td id="t-peak-alloc" class="text-mono">—</td>
+                      </tr>
+                      <tr>
+                        <td>Process Host RSS Memory:</td>
+                        <td id="t-host-rss" class="text-mono">—</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="disclaimer-note">
+                    <strong>Note on Instrumentation:</strong> Physical cache bytes reflect actual PyTorch tensor allocations in GPU/MPS memory across all 28 transformer layers ($2 \times \text{layers} \times \text{heads} \times \text{dim} \times \text{retained} \times \text{bytes}$).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODE B: BENCHMARK DASHBOARD -->
+      <section id="dashboard-mode" class="mode-panel">
+        <div class="dashboard-header-row">
+          <div>
+            <h2>Empirical Research Benchmark Matrix</h2>
+            <p class="section-desc">Controlled evaluation across 120 configurations on Qwen2.5-1.5B-Instruct using deterministic Multi-Depth Needle-in-a-Haystack questions.</p>
+          </div>
+          <div class="dashboard-filter-tabs">
+            <button class="filter-btn active" onclick="switchDashboardTab('phase8')">Phase 8: OGC Ablation</button>
+            <button class="filter-btn" onclick="switchDashboardTab('phase7')">Phase 7: Multi-Baseline</button>
+            <button class="filter-btn" onclick="switchDashboardTab('phase6')">Phase 6: Budget Scaling</button>
+          </div>
+        </div>
+
+        <!-- KPI Highlights Row -->
+        <div class="kpi-grid dashboard-kpis">
+          <div class="kpi-card">
+            <span class="kpi-title">Max KV Memory Reduction</span>
+            <span class="kpi-value text-success">93.70%</span>
+            <span class="kpi-subtext">L=4096 (112.9 MiB → 7.11 MiB)</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Mid-Context Fact Recall</span>
+            <span class="kpi-value text-accent">50.0%</span>
+            <span class="kpi-subtext">OGC-Cache vs 0% StreamingLLM/H2O</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Prefill Latency Advantage</span>
+            <span class="kpi-value">460.7 ms</span>
+            <span class="kpi-subtext">7.7× faster than H2O (3,568 ms)</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Ablation Gain (vs StreamingLLM)</span>
+            <span class="kpi-value text-success">+16.66 pp</span>
+            <span class="kpi-subtext">43.33% vs 26.67% at B=260</span>
+          </div>
+        </div>
+
+        <!-- Comparative Benchmark Data Table -->
+        <div class="card glass-card">
+          <div class="card-header">
+            <h3>Configuration Comparison Table</h3>
+            <span class="badge badge-accent">Identical B=260 Budget</span>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id="benchmark-table" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Architecture</th>
+                    <th>Eviction Mechanism</th>
+                    <th>Overall Acc (%)</th>
+                    <th>Acc $\Delta$ vs Base</th>
+                    <th>KV Savings (%)</th>
+                    <th>KV Cache (L=4096)</th>
+                    <th>Avg Prefill (ms)</th>
+                    <th>Avg Decode (tok/s)</th>
+                  </tr>
+                </thead>
+                <tbody id="benchmark-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Plot Gallery -->
+        <div class="card glass-card">
+          <div class="card-header">
+            <h3>Publication-Quality Benchmark Visualizations</h3>
+            <span class="badge badge-info">Observed Experimental Outcomes</span>
+          </div>
+          <div class="card-body">
+            <div class="plot-gallery">
+              <div class="plot-card">
+                <h4>Ablation Accuracy Comparison</h4>
+                <img src="/results/plot_phase8_ablation_accuracy.png" alt="Ablation Accuracy Comparison" class="zoomable-plot">
+                <p class="plot-caption">Comparison of overall retrieval accuracy across Full Baseline, StreamingLLM, Pure Sliding Window, H2O, and OGC-Cache configurations under identical cache budget.</p>
+              </div>
+
+              <div class="plot-card">
+                <h4>Depth-Wise Fact Recovery</h4>
+                <img src="/results/plot_phase8_depth_recovery.png" alt="Depth-Wise Fact Recovery" class="zoomable-plot">
+                <p class="plot-caption">Retrieval accuracy across document depth positions (5% to 95%). Demonstrates OGC-Cache's recovery of mid-context facts where other methods suffered a 0% blind spot.</p>
+              </div>
+
+              <div class="plot-card">
+                <h4>Pareto Frontier (Memory vs Accuracy)</h4>
+                <img src="/results/plot_phase8_pareto_frontier.png" alt="Pareto Frontier" class="zoomable-plot">
+                <p class="plot-caption">Trade-off curve between sustained KV-cache memory (MiB) at L=4096 and retrieval accuracy (%), illustrating Pareto dominance of the OGC-Cache modification.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reproducibility Card -->
+        <div class="card glass-card">
+          <div class="card-header">
+            <h3>Reproducibility & Verification Environment</h3>
+            <span class="badge badge-success">Fully Reproducible</span>
+          </div>
+          <div class="card-body">
+            <div class="repro-grid">
+              <div class="repro-col">
+                <h4>Hardware & Software Stack</h4>
+                <ul class="spec-list">
+                  <li><strong>Target Hardware:</strong> Apple Silicon M5 (Unified Memory Architecture)</li>
+                  <li><strong>Compute Backend:</strong> PyTorch 2.14.1 with Metal Performance Shaders (MPS)</li>
+                  <li><strong>Base Model:</strong> <code>Qwen/Qwen2.5-1.5B-Instruct</code> (1.54B Parameters)</li>
+                  <li><strong>Precision:</strong> BFloat16 (eager attention) & Float16</li>
+                  <li><strong>Context Windows Tested:</strong> 1,024, 2,048, and 4,096 tokens</li>
+                  <li><strong>Decoding Strategy:</strong> Greedy argmax ($\tau=0.0$, deterministic)</li>
+                </ul>
+              </div>
+              <div class="repro-col">
+                <h4>Execution Commands</h4>
+                <pre class="code-snippet"><code># Run full automated test suite (17 unit/integration tests)
+./.venv/bin/python -m unittest discover tests
+
+# Reproduce Phase 8 ablation study (120 configurations)
+./.venv/bin/python run_phase8_ablation.py
+
+# Launch interactive CLI demonstration
+./.venv/bin/python demo.py --mode interactive</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>Antigravity Long-Context LLM Memory Compression Project</span>
+      <span class="footer-dot">•</span>
+      <span>Problem Statement 2: Squeezing Long-Context Inference into Less Memory</span>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

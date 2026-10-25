@@ -1,0 +1,16 @@
+# Core Deep Learning Framework
+torch==2.14.1
+transformers==5.20.1
+accelerate==1.15.0
+safetensors==0.8.0
+tokenizers==0.23.3
+
+# System Instrumentation & Metrics
+psutil==7.2.2
+
+# Visualization & Plotting
+matplotlib==3.11.2
+numpy==2.5.4
+
+# Progress & Utilities
+tqdm==4.70.1

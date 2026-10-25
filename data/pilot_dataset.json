@@ -1,0 +1,133 @@
+[
+  {
+    "item_id": "pilot_L1024_start_01",
+    "target_context_length": 1024,
+    "actual_token_length": 1023,
+    "depth_category": "start",
+    "depth_fraction": 0.05,
+    "query_type": "single_fact",
+    "needles": [
+      {
+        "fact_id": "pilot_L1024_start_01_fact1",
+        "fact_type": "project_and_port",
+        "key_name": "project_code_and_port",
+        "key_value": "PROJ-2095:7820",
+        "sentence": "Critical Infrastructure Record: System project code is PROJ-2095. The designated primary database operates on port 7820."
+      }
+    ],
+    "document": "Enterprise Architecture Documentation and Systems Verification Specification.\nThis document contains operational configurations, cluster telemetry, and deployment rules.\nRead all sections carefully to answer the inquiry at the end.\n\nCritical Infrastructure Record: System project code is PROJ-2095. The designated primary database operates on port 7820. Failover Architecture Directive: Project PROJ-2095 deployment region is strictly assigned to sa-east-1. The cluster automated failover threshold is configured at exactly 80.9%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-5. Access control tokens validated against OAuth identity provider with token cache TTL set to 14400 seconds. Firewall rule-table sec-rule-426 inspected 152210 ingress frames, dropping 15 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-3.\n\nDatabase maintenance dispatch: Relational shard shard-10 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 42 MB across 4516 disk pages. Wal sequence buffer flush rate averaged 3165 KB/sec. Connection pool pool-1 serviced 121 concurrent client handles with an average acquisition wait time of 345 microseconds. Cache hit ratio registered at 98.9%.\n\nCluster telemetry report: Node node-789 reported an average CPU utilization of 55.3% over the previous 15-minute measurement window. Memory pressure index remained nominal at 22.11 GiB. Ingress packet queue length was recorded as 14 packets with zero drop anomalies. Storage volume vol-4994 maintained an I/O operational throughput of 3534 IOPS with a read latency of 3.04 ms. Network interface eth0 observed 1205 MB received and 69 MB transmitted without CRC checksum mismatches.\n\nDatabase maintenance dispatch: Relational shard shard-1 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 497 MB across 28088 disk pages. Wal sequence buffer flush rate averaged 4324 KB/sec. Connection pool pool-5 serviced 39 concurrent client handles with an average acquisition wait time of 459 microseconds. Cache hit ratio registered at 95.3%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-c-5 routed 3632 requests per second with an HTTP 200 success ratio of 99.52%. Upstream service latency p95 settled at 30.6 ms, while p99 latency was contained at 38.5 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 88.1%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-b-4 routed 5943 requests per second with an HTTP 200 success ratio of 99.54%. Upstream service latency p95 settled at 17.6 ms, while p99 latency was contained at 71.4 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 77.8%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-d-5 routed 1205 requests per second with an HTTP 200 success ratio of 99.27%. Upstream service latency p95 settled at 23.9 ms, while p99 latency was contained at 86.6 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 82.1%.\n\nDatabase maintenance dispatch: Relational shard shard-12 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 197 MB across 17466 disk pages. Wal sequence buffer flush rate averaged 2104 KB/sec. Connection pool pool-4 serviced 68 concurrent client handles with an average acquisition wait time of 281 microseconds. Cache hit ratio registered at 94.5%.\n\nCluster telemetry report: Node node-319 reported an average CPU utilization of 10.7% over the previous 15-minute measurement window. Memory pressure index remained nominal at 14.51 GiB. Ingress packet queue length was recorded as 19 packets with zero drop anomalies. Storage volume vol-401\n\n[Inquiry]\nWhat is the designated primary database port for project PROJ-2095? Answer concisely with only the exact port number:\nAnswer:",
+    "question": "What is the designated primary database port for project PROJ-2095? Answer concisely with only the exact port number:",
+    "ground_truth_answers": [
+      "7820"
+    ],
+    "seed": 49
+  },
+  {
+    "item_id": "pilot_L1024_early_middle_02",
+    "target_context_length": 1024,
+    "actual_token_length": 1022,
+    "depth_category": "early_middle",
+    "depth_fraction": 0.25,
+    "query_type": "multi_fact",
+    "needles": [
+      {
+        "fact_id": "pilot_L1024_early_middle_02_fact1",
+        "fact_type": "project_and_port",
+        "key_name": "project_code_and_port",
+        "key_value": "PROJ-1188:8880",
+        "sentence": "Critical Infrastructure Record: System project code is PROJ-1188. The designated primary database operates on port 8880."
+      },
+      {
+        "fact_id": "pilot_L1024_early_middle_02_fact2",
+        "fact_type": "region_and_threshold",
+        "key_name": "region_and_threshold",
+        "key_value": "ap-south-3:99.7%",
+        "sentence": "Failover Architecture Directive: Project PROJ-1188 deployment region is strictly assigned to ap-south-3. The cluster automated failover threshold is configured at exactly 99.7%."
+      }
+    ],
+    "document": "Enterprise Architecture Documentation and Systems Verification Specification.\nThis document contains operational configurations, cluster telemetry, and deployment rules.\nRead all sections carefully to answer the inquiry at the end.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-a-9 routed 2741 requests per second with an HTTP 200 success ratio of 99.44%. Upstream service latency p95 settled at 6.2 ms, while p99 latency was contained at 27.5 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 92.5%.\n\nCluster telemetry report: Node node-697 reported an average CPU utilization of 37.7% over the previous 15-minute measurement window. Memory pressure index remained nominal at 28.45 GiB. Ingress packet queue length was recorded as 43 packets with zero drop anomalies. Storage volume vol-1015 maintained an I/O operational throughput of 1007 IOPS with a read latency of 5.08 ms. Network interface eth0 observed 838 MB received and 1437 MB transmitted without CRC checksum mismatches.\n\nCritical Infrastructure Record: System project code is PROJ-1188. The designated primary database operates on port 8880. Failover Architecture Directive: Project PROJ-1188 deployment region is strictly assigned to ap-south-3. The cluster automated failover threshold is configured at exactly 99.7%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-d-3 routed 3195 requests per second with an HTTP 200 success ratio of 99.69%. Upstream service latency p95 settled at 26.8 ms, while p99 latency was contained at 60.6 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 83.1%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-5. Access control tokens validated against OAuth identity provider with token cache TTL set to 7200 seconds. Firewall rule-table sec-rule-436 inspected 802918 ingress frames, dropping 12 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-1.\n\nDatabase maintenance dispatch: Relational shard shard-3 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 232 MB across 2874 disk pages. Wal sequence buffer flush rate averaged 2458 KB/sec. Connection pool pool-5 serviced 167 concurrent client handles with an average acquisition wait time of 722 microseconds. Cache hit ratio registered at 95.4%.\n\nCluster telemetry report: Node node-894 reported an average CPU utilization of 60.7% over the previous 15-minute measurement window. Memory pressure index remained nominal at 17.02 GiB. Ingress packet queue length was recorded as 27 packets with zero drop anomalies. Storage volume vol-4989 maintained an I/O operational throughput of 972 IOPS with a read latency of 7.29 ms. Network interface eth0 observed 373 MB received and 773 MB transmitted without CRC checksum mismatches.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-c-2 routed 5707 requests per second with an HTTP 200 success ratio of 99.57%. Upstream service latency p95 settled at 35.3 ms, while p99 latency was contained at 74.1 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 76.8%.\n\nDatabase maintenance dispatch: Relational shard shard-14 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 372 MB across 28249 disk pages. Wal sequence buffer flush rate averaged 1970 KB/sec. Connection pool pool-2 serviced 81 concurrent client handles with an average acquisition wait time of 799 microseconds. Cache hit ratio registered at 94.1%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-b-3 routed 3088 requests per second with an HTTP 200 success ratio of 99.64%.\n\n[Inquiry]\nFor project PROJ-1188, state its assigned deployment region and its primary database port. Answer concisely:\nAnswer:",
+    "question": "For project PROJ-1188, state its assigned deployment region and its primary database port. Answer concisely:",
+    "ground_truth_answers": [
+      "ap-south-3",
+      "8880"
+    ],
+    "seed": 56
+  },
+  {
+    "item_id": "pilot_L1024_middle_03",
+    "target_context_length": 1024,
+    "actual_token_length": 1023,
+    "depth_category": "middle",
+    "depth_fraction": 0.5,
+    "query_type": "single_fact",
+    "needles": [
+      {
+        "fact_id": "pilot_L1024_middle_03_fact1",
+        "fact_type": "project_and_port",
+        "key_name": "project_code_and_port",
+        "key_value": "PROJ-8293:8639",
+        "sentence": "Critical Infrastructure Record: System project code is PROJ-8293. The designated primary database operates on port 8639."
+      }
+    ],
+    "document": "Enterprise Architecture Documentation and Systems Verification Specification.\nThis document contains operational configurations, cluster telemetry, and deployment rules.\nRead all sections carefully to answer the inquiry at the end.\n\nContainer orchestration ledger: Deployment deploy-svc-99 scaled replica count from 3 to 5 pods in response to horizontal pod autoscaler signal sig-132. Container image digest sha256:e20bd5353ce56 passed cryptographic signature verification. Readiness probes succeeded on port 9090 after an initial delay of 29 s. CoreDNS resolution latency across pod subnet remained below 2.42 ms.\n\nContainer orchestration ledger: Deployment deploy-svc-47 scaled replica count from 5 to 5 pods in response to horizontal pod autoscaler signal sig-990. Container image digest sha256:3fcd0391ab0793 passed cryptographic signature verification. Readiness probes succeeded on port 9090 after an initial delay of 9 s. CoreDNS resolution latency across pod subnet remained below 0.49 ms.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-d-1 routed 4143 requests per second with an HTTP 200 success ratio of 99.41%. Upstream service latency p95 settled at 44.4 ms, while p99 latency was contained at 71.5 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 88.8%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-4. Access control tokens validated against OAuth identity provider with token cache TTL set to 14400 seconds. Firewall rule-table sec-rule-270 inspected 325033 ingress frames, dropping 11 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-5.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-b-9 routed 6693 requests per second with an HTTP 200 success ratio of 99.48%. Upstream service latency p95 settled at 28.2 ms, while p99 latency was contained at 76.4 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 74.6%.\n\nCritical Infrastructure Record: System project code is PROJ-8293. The designated primary database operates on port 8639. Failover Architecture Directive: Project PROJ-8293 deployment region is strictly assigned to ap-south-2. The cluster automated failover threshold is configured at exactly 85.2%.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-c-2 routed 9767 requests per second with an HTTP 200 success ratio of 99.63%. Upstream service latency p95 settled at 16.8 ms, while p99 latency was contained at 44.5 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 72.3%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-5. Access control tokens validated against OAuth identity provider with token cache TTL set to 7200 seconds. Firewall rule-table sec-rule-772 inspected 173410 ingress frames, dropping 13 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-1.\n\nDatabase maintenance dispatch: Relational shard shard-3 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 489 MB across 34475 disk pages. Wal sequence buffer flush rate averaged 1761 KB/sec. Connection pool pool-3 serviced 12 concurrent client handles with an average acquisition wait time of 303 microseconds. Cache hit ratio registered at 97.2%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-4. Access control tokens validated against OAuth identity provider with token cache TTL set to 14400 seconds. Firewall rule-table sec-rule-753 inspected 144923 ingress frames, dropping 11 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-2.\n\nCluster telemetry report: Node node-480 reported an average\n\n[Inquiry]\nWhat is the designated primary database port for project PROJ-8293? Answer concisely with only the exact port number:\nAnswer:",
+    "question": "What is the designated primary database port for project PROJ-8293? Answer concisely with only the exact port number:",
+    "ground_truth_answers": [
+      "8639"
+    ],
+    "seed": 63
+  },
+  {
+    "item_id": "pilot_L1024_late_middle_04",
+    "target_context_length": 1024,
+    "actual_token_length": 1023,
+    "depth_category": "late_middle",
+    "depth_fraction": 0.75,
+    "query_type": "multi_fact",
+    "needles": [
+      {
+        "fact_id": "pilot_L1024_late_middle_04_fact1",
+        "fact_type": "project_and_port",
+        "key_name": "project_code_and_port",
+        "key_value": "PROJ-2940:7409",
+        "sentence": "Critical Infrastructure Record: System project code is PROJ-2940. The designated primary database operates on port 7409."
+      },
+      {
+        "fact_id": "pilot_L1024_late_middle_04_fact2",
+        "fact_type": "region_and_threshold",
+        "key_name": "region_and_threshold",
+        "key_value": "sa-east-2:74.6%",
+        "sentence": "Failover Architecture Directive: Project PROJ-2940 deployment region is strictly assigned to sa-east-2. The cluster automated failover threshold is configured at exactly 74.6%."
+      }
+    ],
+    "document": "Enterprise Architecture Documentation and Systems Verification Specification.\nThis document contains operational configurations, cluster telemetry, and deployment rules.\nRead all sections carefully to answer the inquiry at the end.\n\nCluster telemetry report: Node node-258 reported an average CPU utilization of 71.5% over the previous 15-minute measurement window. Memory pressure index remained nominal at 22.91 GiB. Ingress packet queue length was recorded as 13 packets with zero drop anomalies. Storage volume vol-7726 maintained an I/O operational throughput of 3313 IOPS with a read latency of 2.26 ms. Network interface eth0 observed 1379 MB received and 198 MB transmitted without CRC checksum mismatches.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-b-8 routed 7558 requests per second with an HTTP 200 success ratio of 99.79%. Upstream service latency p95 settled at 26.8 ms, while p99 latency was contained at 84.8 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 73.8%.\n\nCluster telemetry report: Node node-578 reported an average CPU utilization of 31.6% over the previous 15-minute measurement window. Memory pressure index remained nominal at 6.04 GiB. Ingress packet queue length was recorded as 25 packets with zero drop anomalies. Storage volume vol-6197 maintained an I/O operational throughput of 4416 IOPS with a read latency of 7.1 ms. Network interface eth0 observed 1114 MB received and 1400 MB transmitted without CRC checksum mismatches.\n\nCluster telemetry report: Node node-582 reported an average CPU utilization of 75.6% over the previous 15-minute measurement window. Memory pressure index remained nominal at 23.82 GiB. Ingress packet queue length was recorded as 1 packets with zero drop anomalies. Storage volume vol-9437 maintained an I/O operational throughput of 1248 IOPS with a read latency of 3.35 ms. Network interface eth0 observed 1295 MB received and 884 MB transmitted without CRC checksum mismatches.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-b-8 routed 10902 requests per second with an HTTP 200 success ratio of 99.98%. Upstream service latency p95 settled at 30.1 ms, while p99 latency was contained at 29.9 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 85.3%.\n\nCluster telemetry report: Node node-587 reported an average CPU utilization of 53.1% over the previous 15-minute measurement window. Memory pressure index remained nominal at 17.43 GiB. Ingress packet queue length was recorded as 10 packets with zero drop anomalies. Storage volume vol-4968 maintained an I/O operational throughput of 1499 IOPS with a read latency of 6.85 ms. Network interface eth0 observed 251 MB received and 541 MB transmitted without CRC checksum mismatches.\n\nCritical Infrastructure Record: System project code is PROJ-2940. The designated primary database operates on port 7409. Failover Architecture Directive: Project PROJ-2940 deployment region is strictly assigned to sa-east-2. The cluster automated failover threshold is configured at exactly 74.6%.\n\nDatabase maintenance dispatch: Relational shard shard-9 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 450 MB across 6684 disk pages. Wal sequence buffer flush rate averaged 2757 KB/sec. Connection pool pool-4 serviced 193 concurrent client handles with an average acquisition wait time of 306 microseconds. Cache hit ratio registered at 98.5%.\n\nCluster telemetry report: Node node-953 reported an average CPU utilization of 27.6% over the previous 15-minute measurement window. Memory pressure index remained nominal at 10.43 GiB. Ingress packet queue length was recorded as 3 packets with zero drop anomalies. Storage volume vol-4201 maintained an I/O operational throughput of 10\n\n[Inquiry]\nFor project PROJ-2940, state its assigned deployment region and its primary database port. Answer concisely:\nAnswer:",
+    "question": "For project PROJ-2940, state its assigned deployment region and its primary database port. Answer concisely:",
+    "ground_truth_answers": [
+      "sa-east-2",
+      "7409"
+    ],
+    "seed": 70
+  },
+  {
+    "item_id": "pilot_L1024_end_05",
+    "target_context_length": 1024,
+    "actual_token_length": 1022,
+    "depth_category": "end",
+    "depth_fraction": 0.95,
+    "query_type": "single_fact",
+    "needles": [
+      {
+        "fact_id": "pilot_L1024_end_05_fact1",
+        "fact_type": "project_and_port",
+        "key_name": "project_code_and_port",
+        "key_value": "PROJ-5140:7669",
+        "sentence": "Critical Infrastructure Record: System project code is PROJ-5140. The designated primary database operates on port 7669."
+      }
+    ],
+    "document": "Enterprise Architecture Documentation and Systems Verification Specification.\nThis document contains operational configurations, cluster telemetry, and deployment rules.\nRead all sections carefully to answer the inquiry at the end.\n\nDatabase maintenance dispatch: Relational shard shard-3 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 292 MB across 18062 disk pages. Wal sequence buffer flush rate averaged 4474 KB/sec. Connection pool pool-8 serviced 62 concurrent client handles with an average acquisition wait time of 241 microseconds. Cache hit ratio registered at 95.1%.\n\nCluster telemetry report: Node node-900 reported an average CPU utilization of 68.8% over the previous 15-minute measurement window. Memory pressure index remained nominal at 31.25 GiB. Ingress packet queue length was recorded as 17 packets with zero drop anomalies. Storage volume vol-8286 maintained an I/O operational throughput of 1195 IOPS with a read latency of 3.14 ms. Network interface eth0 observed 1134 MB received and 165 MB transmitted without CRC checksum mismatches.\n\nContainer orchestration ledger: Deployment deploy-svc-30 scaled replica count from 3 to 6 pods in response to horizontal pod autoscaler signal sig-125. Container image digest sha256:1000dfa2767bd1 passed cryptographic signature verification. Readiness probes succeeded on port 5000 after an initial delay of 23 s. CoreDNS resolution latency across pod subnet remained below 1.84 ms.\n\nContainer orchestration ledger: Deployment deploy-svc-72 scaled replica count from 6 to 15 pods in response to horizontal pod autoscaler signal sig-937. Container image digest sha256:3d06592225e35d passed cryptographic signature verification. Readiness probes succeeded on port 5000 after an initial delay of 13 s. CoreDNS resolution latency across pod subnet remained below 0.85 ms.\n\nDatabase maintenance dispatch: Relational shard shard-12 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 485 MB across 46615 disk pages. Wal sequence buffer flush rate averaged 501 KB/sec. Connection pool pool-4 serviced 160 concurrent client handles with an average acquisition wait time of 648 microseconds. Cache hit ratio registered at 97.3%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-1. Access control tokens validated against OAuth identity provider with token cache TTL set to 3600 seconds. Firewall rule-table sec-rule-146 inspected 587394 ingress frames, dropping 12 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-1.\n\nService mesh traffic advisory: Envoy proxy instances in zone zone-d-7 routed 11302 requests per second with an HTTP 200 success ratio of 99.88%. Upstream service latency p95 settled at 36.3 ms, while p99 latency was contained at 47.2 ms. Circuit breaker trip count was 0 across all worker pods. Active TLS sessions negotiated using cipher suite TLS_AES_256_GCM_SHA384 with session resumption rate 72.4%.\n\nDatabase maintenance dispatch: Relational shard shard-4 completed table vacuuming and b-tree index optimization. Dead tuple cleanup reclaimed 361 MB across 29856 disk pages. Wal sequence buffer flush rate averaged 4538 KB/sec. Connection pool pool-6 serviced 131 concurrent client handles with an average acquisition wait time of 511 microseconds. Cache hit ratio registered at 99.3%.\n\nSecurity compliance audit: Key management service performed scheduled key rotation for ring-ring-1. Access control tokens validated against OAuth identity provider with token cache TTL set to 7200 seconds. Firewall rule-table sec-rule-209 inspected 650664 ingress frames, dropping 13 unmatched fragments. Audit log hash chaining verified integrity with zero sequence gaps across event partition part-0.\n\nCluster telemetry report: Node node-130 reported an average CPU utilization of\n\nCritical Infrastructure Record: System project code is PROJ-5140. The designated primary database operates on port 7669. Failover Architecture Directive: Project PROJ-5140 deployment region is strictly assigned to eu-west-1. The cluster automated failover threshold is configured at exactly 76.2%.\n\n[Inquiry]\nWhat is the designated primary database port for project PROJ-5140? Answer concisely with only the exact port number:\nAnswer:",
+    "question": "What is the designated primary database port for project PROJ-5140? Answer concisely with only the exact port number:",
+    "ground_truth_answers": [
+      "7669"
+    ],
+    "seed": 77
+  }
+]
