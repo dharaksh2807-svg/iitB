@@ -307,8 +307,9 @@ lengths are persisted. Supplied historical datasets are scored separately.
 
 Report all-facts boundary-matched accuracy, canonical exact match, strata, and
 paired accuracy differences with 2,000 seeded bootstrap resamples stratified by
-length/depth/type. Singleton pilot strata provide no resampling variance and are
-not evidence of precise uncertainty. CIs describe this synthetic population,
+length/depth/type. Intervals are withheld when any stratum has fewer than two
+independent cases; singleton pilot strata cannot estimate resampling variance.
+CIs describe this synthetic population,
 not general long-context performance; no multiple-comparison adjustment is made.
 
 All policies use full-prefill logits for token 1. This token has already seen all

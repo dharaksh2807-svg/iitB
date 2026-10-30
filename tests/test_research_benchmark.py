@@ -51,6 +51,9 @@ class ResearchValidity(unittest.TestCase):
         self.assertEqual(paired_interval(a, a)["paired_bootstrap_95_ci_pp"], [0, 0])
         with self.assertRaises(ValueError):
             paired_interval(a[:-1], b)
+        pilot = paired_interval(a[:1], b[:1])
+        self.assertIsNone(pilot["paired_bootstrap_95_ci_pp"])
+        self.assertEqual(pilot["bootstrap_samples"], 0)
 
     def test_all_matched_budgets_and_policy_settings(self):
         engines = make_engines(DEFAULT_MODEL, DEFAULT_REVISION, "cpu", torch.float32,

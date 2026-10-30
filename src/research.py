@@ -106,6 +106,12 @@ def paired_interval(records, reference, seed=17, samples=2000):
         strata[key].append(int(row["is_correct"]) - int(other["is_correct"]))
     if not strata:
         raise ValueError("No paired records")
+    min_cases = min(map(len, strata.values()))
+    if min_cases < 2:
+        return dict(delta_accuracy_pp=100 * sum(sum(v) for v in strata.values()) / len(records),
+                    paired_bootstrap_95_ci_pp=None, bootstrap_samples=0, bootstrap_seed=seed,
+                    independent_pairs=len(records), min_cases_per_stratum=min_cases,
+                    caveat="Interval withheld: singleton strata cannot estimate within-stratum variance")
     rng = np.random.default_rng(seed)
     estimates = np.zeros(samples)
     for values in strata.values():
@@ -116,8 +122,8 @@ def paired_interval(records, reference, seed=17, samples=2000):
     return dict(delta_accuracy_pp=100 * sum(sum(v) for v in strata.values()) / count,
                 paired_bootstrap_95_ci_pp=[float(lo), float(hi)], bootstrap_samples=samples,
                 bootstrap_seed=seed, independent_pairs=count,
-                min_cases_per_stratum=min(map(len, strata.values())),
-                caveat="Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment")
+                min_cases_per_stratum=min_cases,
+                caveat="Synthetic benchmark only; no multiple-comparison adjustment")
 
 
 def summarize(records):
