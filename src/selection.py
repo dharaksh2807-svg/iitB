@@ -43,6 +43,11 @@ def select_history(scores, start: int, end: int, capacity: int, chunk_size: int,
                   for s in range(a, b, chunk_size)]
     else:
         chunks = [(s, min(s + chunk_size, end)) for s in range(start, end, chunk_size)]
+    if policy in {"ogc", "random_chunks"}:
+        if capacity % chunk_size:
+            raise ValueError("Fixed-chunk capacity must be divisible by chunk size")
+        # A short tail must not turn K fixed chunks into K+1 fragments.
+        chunks = [(a, b) for a, b in chunks if b - a == chunk_size]
     if policy == "random_chunks":
         random.Random(seed).shuffle(chunks)
     elif policy in {"ogc", "adaptive_chunks", "entity_chunks"}:
@@ -58,4 +63,6 @@ def select_history(scores, start: int, end: int, capacity: int, chunk_size: int,
             chosen.extend(range(a, a + take))
         if len(chosen) == capacity:
             break
+    if len(chosen) != capacity:
+        raise AssertionError("Selector failed to fill historical budget")
     return sorted(chosen), sorted(ranges)

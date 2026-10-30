@@ -206,6 +206,10 @@ class CacheCorrectness(unittest.TestCase):
         a, _ = select_history(scores, 4, 1308, 64, 32, "random_chunks", 4)
         b, _ = select_history(scores, 4, 1308, 64, 32, "random_chunks", 5)
         self.assertNotEqual(a, b)
+        for policy in ["ogc", "random_chunks"]:
+            _, ranges = select_history(torch.arange(91).float(), 4, 85, 64, 32, policy, 4)
+            self.assertEqual(len(ranges), 2)
+            self.assertTrue(all(b - a == 32 for a, b in ranges))
 
     def test_storage_views_and_physical_pruning(self):
         key, value = torch.zeros(1, 1, 100, 4), torch.zeros(1, 1, 100, 4)
