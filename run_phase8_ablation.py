@@ -21,6 +21,8 @@ import numpy as np
 import torch
 
 from src.ogc_cache import OGCCacheEngine
+from src.metrics import checkpoint_device_mib
+from src.dataset import score_response
 
 
 def load_dataset(filepath: str = "data/benchmark_dataset.json") -> List[Dict[str, Any]]:
@@ -71,7 +73,7 @@ def evaluate_ogc_config(
         res = engine.generate(prompt=prompt, max_new_tokens=35)
         pred = res.generated_text
 
-        is_correct = all(gt.lower() in pred.lower() for gt in gts)
+        is_correct, _, _ = score_response(pred, gts)
         if is_correct:
             total_correct += 1
             status_str = "[PASS]"
@@ -82,6 +84,7 @@ def evaluate_ogc_config(
         if is_correct:
             by_depth[depth]["correct"] += 1
 
+        by_context.setdefault(ctx_len, {"correct": 0, "total": 0, "prefill_ms": [], "decode_tps": [], "savings": []})
         by_context[ctx_len]["total"] += 1
         if is_correct:
             by_context[ctx_len]["correct"] += 1
@@ -105,12 +108,17 @@ def evaluate_ogc_config(
             "prediction": pred,
             "is_correct": is_correct,
             "prefill_time_ms": res.prefill_time_ms,
+            "selection_time_ms": res.selection_time_ms,
+            "ttft_ms": res.ttft_ms,
+            "decode_time_ms": res.decode_time_ms,
+            "decode_steps": res.decode_steps,
+            "total_time_ms": res.total_time_ms,
             "decode_tokens_per_sec": res.decode_tokens_per_sec,
             "uncompressed_kv_bytes": res.uncompressed_kv_bytes,
             "compressed_kv_bytes": res.compressed_kv_bytes,
             "kv_cache_savings_pct": res.kv_cache_savings_pct,
             "selected_chunk_ranges": res.selected_chunk_ranges,
-            "peak_device_allocated_mib": res.memory_metrics.get("peak_device_allocated_mib", 0.0),
+            "peak_device_allocated_mib": checkpoint_device_mib(res.memory_metrics),
         })
 
     total_eval = len(dataset)
@@ -237,11 +245,14 @@ def generate_plots(all_results: Dict[str, Any], output_dir: str = "results") -> 
     fig, ax = plt.subplots(figsize=(10, 6))
     for c in configs:
         acc = all_results[c]["overall_accuracy_pct"]
-        # KV cache size at L=4096
-        if c == "Full Baseline":
-            kv_size = 112.9
-        else:
-            kv_size = 7.11
+        # Plot only measured bytes from the same L=4096 stratum.
+        measured = [row for row in all_results[c].get("items", []) if row.get("context_length") == 4096]
+        byte_values = [row.get("compressed_kv_bytes", row.get("kv_cache_bytes")) for row in measured]
+        byte_values = [value for value in byte_values if value is not None]
+        if not byte_values:
+            continue
+        kv_size = float(np.mean(byte_values)) / 1024**2
+        acc = 100 * float(np.mean([row["is_correct"] for row in measured]))
         prefill = all_results[c]["avg_prefill_ms"]
         color = colors.get(c, "#1f77b4")
         ax.scatter([kv_size], [acc], s=160, color=color, zorder=5, edgecolors="black", linewidth=1.5, label=c)
@@ -250,7 +261,7 @@ def generate_plots(all_results: Dict[str, Any], output_dir: str = "results") -> 
                     xytext=(0, offset_y), textcoords="offset points",
                     ha="center", va="bottom" if offset_y > 0 else "top", fontsize=8, fontweight="bold")
 
-    ax.set_title("Pareto Trade-Off: KV Cache Memory at L=4096 vs. Retrieval Accuracy", fontsize=14, fontweight="bold", pad=15)
+    ax.set_title("Pareto Trade-Off: KV Cache Memory at L=4096 vs. Retrieval Accuracy at L=4096", fontsize=14, fontweight="bold", pad=15)
     ax.set_xlabel("Sustained KV Cache Memory (MiB)", fontsize=12, fontweight="bold")
     ax.set_ylabel("Overall Accuracy (%)", fontsize=12, fontweight="bold")
     ax.set_ylim(-5, 115)
@@ -264,105 +275,9 @@ def generate_plots(all_results: Dict[str, Any], output_dir: str = "results") -> 
 
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser(description="Phase 8 Ablation Study for OGC-Cache")
-    parser.add_argument("--dataset", type=str, default="data/benchmark_dataset.json", help="Path to evaluation dataset")
-    parser.add_argument("--plot-only", action="store_true", help="Re-generate comparison plots from existing results JSON")
-    args = parser.parse_args()
-
-    print("===========================================================================")
-    print("PHASE 8 ABLATION STUDY: EVALUATING OBSERVATION-GUIDED CHUNKED CACHE (OGC)")
-    print("===========================================================================")
-
-    output_dir = "results"
-    ablation_json_path = os.path.join(output_dir, "phase8_ablation_results.json")
-
-    if args.plot_only:
-        if not os.path.exists(ablation_json_path):
-            print(f"Error: {ablation_json_path} does not exist to plot from.")
-            sys.exit(1)
-        print(f"[Phase 8] Regenerating plots from {ablation_json_path}...")
-        with open(ablation_json_path, "r", encoding="utf-8") as f:
-            all_results = json.load(f)
-        generate_plots(all_results, output_dir=output_dir)
-        print("[Phase 8] Plot generation complete.")
-        return
-
-    dataset = load_dataset(args.dataset)
-
-    # Load baseline results from Phase 7 to avoid recomputing identical unmodified baselines
-    p7_path = os.path.join(output_dir, "phase7_comparative_results.json")
-    if not os.path.exists(p7_path):
-        print(f"Error: {p7_path} not found. Run phase 7 first.")
-        sys.exit(1)
-
-    with open(p7_path, "r", encoding="utf-8") as f:
-        all_results = json.load(f)
-
-    # 1. Evaluate OGC-Cache (Config 1: K=1, C=64)
-    print("\n[Phase 8] Initializing OGC-Cache Config 1 (K=1, C=64, W=192, S=4)...")
-    engine_c1 = OGCCacheEngine(
-        model_name="Qwen/Qwen2.5-1.5B-Instruct",
-        sink_tokens=4,
-        recent_window=192,
-        chunk_size=64,
-        num_chunks=1,
-        query_window=48,
-        dtype=torch.bfloat16,
-    )
-    engine_c1.load_model()
-    res_c1 = evaluate_ogc_config(engine_c1, dataset, "OGC-Cache (K=1, C=64)")
-    all_results["OGC-Cache (K=1, C=64)"] = res_c1
-
-    del engine_c1
-    gc.collect()
-    if torch.backends.mps.is_available():
-        torch.mps.empty_cache()
-
-    # 2. Evaluate OGC-Cache (Config 2: K=2, C=32)
-    print("\n[Phase 8] Initializing OGC-Cache Config 2 (K=2, C=32, W=192, S=4)...")
-    engine_c2 = OGCCacheEngine(
-        model_name="Qwen/Qwen2.5-1.5B-Instruct",
-        sink_tokens=4,
-        recent_window=192,
-        chunk_size=32,
-        num_chunks=2,
-        query_window=48,
-        dtype=torch.bfloat16,
-    )
-    engine_c2.load_model()
-    res_c2 = evaluate_ogc_config(engine_c2, dataset, "OGC-Cache (K=2, C=32)")
-    all_results["OGC-Cache (K=2, C=32)"] = res_c2
-
-    del engine_c2
-    gc.collect()
-    if torch.backends.mps.is_available():
-        torch.mps.empty_cache()
-
-    # Save complete ablation results
-    out_json = "results/phase8_ablation_results.json"
-    with open(out_json, "w", encoding="utf-8") as f:
-        json.dump(all_results, f, indent=2)
-    print(f"\n[Phase 8] Saved full ablation results to: {out_json}")
-
-    # Generate comparative plots
-    generate_plots(all_results)
-
-    # Print summary table
-    print("\n" + "=" * 95)
-    print("PHASE 8 COMPREHENSIVE ABLATION STUDY RESULTS TABLE")
-    print("=" * 95)
-    print(f"{'Configuration':32s} {'Overall Acc (%)':17s} {'Accuracy Delta':16s} {'KV Savings (%)':16s} {'Avg Prefill (ms)'}")
-    print("-" * 95)
-    full_acc = all_results["Full Baseline"]["overall_accuracy_pct"]
-    for name, res in all_results.items():
-        acc = res["overall_accuracy_pct"]
-        diff = acc - full_acc
-        diff_str = f"{diff:+.2f} pp" if name != "Full Baseline" else "Reference"
-        sav = res["overall_kv_savings_pct"]
-        pref = res["avg_prefill_ms"]
-        print(f"{name:32s} {acc:<17.2f} {diff_str:<16s} {sav:<16.2f} {pref:<15.1f}")
-    print("=" * 95 + "\n")
+    # Historical files remain evidence, not inputs to a new comparison.
+    from run_research_benchmark import main as run_fresh, POLICIES
+    run_fresh(default_policies=POLICIES)
 
 
 if __name__ == "__main__":

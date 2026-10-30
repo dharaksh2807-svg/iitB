@@ -61,7 +61,7 @@ def evaluate_engine_on_dataset(engine: Any, items: List[Dict[str, Any]], config_
 
         total_prefill_ms += res.prefill_time_ms
         total_decode_ms += res.decode_time_ms
-        total_tokens_gen += res.generated_tokens
+        total_tokens_gen += res.decode_steps
         total_uncompressed_bytes += uncomp_b
         total_compressed_bytes += comp_b
 
@@ -283,69 +283,8 @@ def generate_publication_plots(results: Dict[str, Any], output_dir: str):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Execute Phase 6 Benchmark Evaluation.")
-    parser.add_argument("--dataset", type=str, default="data/benchmark_dataset.json", help="Dataset path")
-    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct", help="Model Hub ID")
-    parser.add_argument("--device", type=str, default="mps", help="Device (mps, cpu)")
-    parser.add_argument("--max_items", type=int, default=None, help="Limit items per config")
-    args = parser.parse_args()
-
-    with open(args.dataset, "r") as f:
-        items = json.load(f)
-    if args.max_items:
-        items = items[:args.max_items]
-
-    print(f"Loaded {len(items)} items from {args.dataset}")
-
-    all_results: Dict[str, Any] = {}
-
-    # Config 1: Full Baseline
-    engine_base = UncompressedBaselineEngine(model_name_or_path=args.model, device=args.device)
-    engine_base.load_model()
-    all_results["Full Baseline"] = evaluate_engine_on_dataset(engine_base, items, "Full Baseline")
-
-    # Config 2: StreamingLLM (B=260: S=4, W=256)
-    engine_s260 = StreamingLLMEngine(model_name_or_path=args.model, device=args.device, sink_tokens=4, window_tokens=256)
-    engine_s260.load_model()
-    all_results["StreamingLLM (B=260)"] = evaluate_engine_on_dataset(engine_s260, items, "StreamingLLM (B=260)")
-
-    # Config 3: StreamingLLM (B=516: S=4, W=512)
-    engine_s516 = StreamingLLMEngine(model_name_or_path=args.model, device=args.device, sink_tokens=4, window_tokens=512)
-    engine_s516.load_model()
-    all_results["StreamingLLM (B=516)"] = evaluate_engine_on_dataset(engine_s516, items, "StreamingLLM (B=516)")
-
-    # Config 4: StreamingLLM (B=1028: S=4, W=1024)
-    engine_s1028 = StreamingLLMEngine(model_name_or_path=args.model, device=args.device, sink_tokens=4, window_tokens=1024)
-    engine_s1028.load_model()
-    all_results["StreamingLLM (B=1028)"] = evaluate_engine_on_dataset(engine_s1028, items, "StreamingLLM (B=1028)")
-
-    # Save full JSON results
-    os.makedirs("results", exist_ok=True)
-    out_json = "results/phase6_benchmark_results.json"
-    with open(out_json, "w") as f:
-        json.dump(all_results, f, indent=2)
-    print(f"\n[Phase6] Saved complete benchmark evaluation results to: {out_json}")
-
-    # Generate publication plots
-    generate_publication_plots(all_results, output_dir="results")
-
-    # Print Comparative Matrix Table
-    print("\n" + "=" * 85)
-    print("PHASE 6 EMPIRICAL COMPARISON SUMMARY TABLE")
-    print("=" * 85)
-    print(f"{'Configuration':<24}{'Overall Acc (%)':<16}{'Accuracy $\\Delta$ (pp)':<18}{'KV Savings (%)':<18}{'Avg Prefill (ms)':<16}")
-    print("-" * 85)
-    base_acc = all_results["Full Baseline"]["overall_accuracy_pct"]
-    for cfg, data in all_results.items():
-        deg = data["overall_accuracy_pct"] - base_acc
-        print(
-            f"{cfg:<24}"
-            f"{data['overall_accuracy_pct']:<16.2f}"
-            f"{deg:<+18.2f}"
-            f"{data['overall_kv_savings_pct']:<18.2f}"
-            f"{data['avg_prefill_ms']:<16.1f}"
-        )
-    print("=" * 85)
+    from run_research_benchmark import main as run_fresh
+    run_fresh(default_policies=("full", "streaming"))
 
 
 if __name__ == "__main__":

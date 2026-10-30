@@ -83,7 +83,7 @@ def evaluate_engine_on_dataset(
 
         total_prefill_ms += res.prefill_time_ms
         total_decode_ms += res.decode_time_ms
-        total_tokens_gen += res.generated_tokens
+        total_tokens_gen += res.decode_steps
         total_uncompressed_bytes += uncomp_b
         total_compressed_bytes += comp_b
 
@@ -128,6 +128,11 @@ def evaluate_engine_on_dataset(
             "prediction": pred.strip(),
             "is_correct": is_correct,
             "prefill_time_ms": res.prefill_time_ms,
+            "selection_time_ms": res.selection_time_ms,
+            "ttft_ms": res.ttft_ms,
+            "decode_time_ms": res.decode_time_ms,
+            "decode_steps": res.decode_steps,
+            "total_time_ms": res.total_time_ms,
             "decode_tokens_per_sec": res.decode_tokens_per_sec,
             "uncompressed_kv_bytes": uncomp_b,
             "compressed_kv_bytes": comp_b,
@@ -313,92 +318,9 @@ def generate_phase7_comparative_plots(results: Dict[str, Any], output_dir: str):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Execute Phase 7 Multi-Baseline Benchmark.")
-    parser.add_argument("--dataset", type=str, default="data/benchmark_dataset.json", help="Dataset path")
-    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct", help="Model Hub ID")
-    parser.add_argument("--device", type=str, default="mps", help="Device (mps, cpu)")
-    args = parser.parse_args()
-
-    with open(args.dataset, "r") as f:
-        items = json.load(f)
-
-    print(f"Loaded {len(items)} items from {args.dataset}")
-    all_results: Dict[str, Any] = {}
-
-    # Load Full Baseline and StreamingLLM results from Phase 6
-    phase6_path = "results/phase6_benchmark_results.json"
-    if os.path.exists(phase6_path):
-        with open(phase6_path, "r") as f:
-            p6_data = json.load(f)
-            if "Full Baseline" in p6_data:
-                all_results["Full Baseline"] = p6_data["Full Baseline"]
-            if "StreamingLLM (B=260)" in p6_data:
-                # Rename for clean comparison label
-                all_results["StreamingLLM (S=4, W=256)"] = p6_data["StreamingLLM (B=260)"]
-                all_results["StreamingLLM (S=4, W=256)"]["config_name"] = "StreamingLLM (S=4, W=256)"
-
-    # ----------------------------------------------------
-    # Baseline 1: Pure Sliding Window (S=0, W=260)
-    # ----------------------------------------------------
-    print("\n[Phase7] Initializing Baseline 1: Pure Sliding Window (W=260)...")
-    engine_sw = PureSlidingWindowEngine(model_name_or_path=args.model, device=args.device, window_tokens=260)
-    engine_sw.load_model()
-    all_results["Pure Sliding Window (W=260)"] = evaluate_engine_on_dataset(
-        engine_sw, items, "Pure Sliding Window (W=260)"
-    )
-    # Explicit garbage collection to maintain host memory hygiene
-    del engine_sw
-    gc.collect()
-    if torch.backends.mps.is_available():
-        torch.mps.empty_cache()
-    time.sleep(2)
-
-    # ----------------------------------------------------
-    # Baseline 2: H2O Heavy-Hitter Cache (H=64, W=196)
-    # ----------------------------------------------------
-    print("\n[Phase7] Initializing Baseline 2: H2O Heavy-Hitter Cache (H=64, W=196)...")
-    engine_h2o = H2OCacheEngine(
-        model_name_or_path=args.model,
-        device=args.device,
-        heavy_hitters=64,
-        recent_tokens=196,
-    )
-    engine_h2o.load_model()
-    all_results["H2O Heavy-Hitter (H=64, W=196)"] = evaluate_engine_on_dataset(
-        engine_h2o, items, "H2O Heavy-Hitter (H=64, W=196)"
-    )
-    del engine_h2o
-    gc.collect()
-    if torch.backends.mps.is_available():
-        torch.mps.empty_cache()
-
-    # Save full comparative results
-    os.makedirs("results", exist_ok=True)
-    out_json = "results/phase7_comparative_results.json"
-    with open(out_json, "w") as f:
-        json.dump(all_results, f, indent=2)
-    print(f"\n[Phase7] Saved full multi-baseline comparison results to: {out_json}")
-
-    # Generate comparative plots
-    generate_phase7_comparative_plots(all_results, output_dir="results")
-
-    # Print Summary Table
-    print("\n" + "=" * 90)
-    print("PHASE 7 MULTI-BASELINE COMPARATIVE RESULTS TABLE")
-    print("=" * 90)
-    print(f"{'Configuration':<32}{'Overall Acc (%)':<16}{'Accuracy $\\Delta$ (pp)':<18}{'KV Savings (%)':<18}{'Avg Prefill (ms)':<16}")
-    print("-" * 90)
-    base_acc = all_results["Full Baseline"]["overall_accuracy_pct"]
-    for cfg, data in all_results.items():
-        deg = data["overall_accuracy_pct"] - base_acc
-        print(
-            f"{cfg:<32}"
-            f"{data['overall_accuracy_pct']:<16.2f}"
-            f"{deg:<+18.2f}"
-            f"{data['overall_kv_savings_pct']:<18.2f}"
-            f"{data['avg_prefill_ms']:<16.1f}"
-        )
-    print("=" * 90)
+    # Historical files remain evidence, not inputs to a new comparison.
+    from run_research_benchmark import main as run_fresh, POLICIES
+    run_fresh(default_policies=("full", "streaming", "sliding", "h2o_prefill_approx"))
 
 
 if __name__ == "__main__":

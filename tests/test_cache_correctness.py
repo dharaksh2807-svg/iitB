@@ -226,6 +226,26 @@ class CacheCorrectness(unittest.TestCase):
             cuda.assert_called_once()
             mps.assert_called_once()
 
+    def test_budget_crossing_uses_pending_query_scores(self):
+        engine = self.engine(sink_tokens=2, recent_window=6, chunk_size=4, selection_policy="query_tokens")
+        # A prompt below budget must defer selection until decoding crosses it.
+        result = engine.generate("1 2 3 4 5 6 7 8 9 10", 20)
+        self.assertEqual(result.cache_lengths[:3], [10, 11, 12])
+        self.assertEqual(result.cache_lengths[3:], [12] * 17)
+        self.assertTrue(result.selected_chunk_ranges)
+
+    def test_benchmark_extracts_actual_bytes_and_nested_telemetry(self):
+        from run_research_benchmark import record_result
+        engine = self.engine(sink_tokens=2, recent_window=6, chunk_size=4)
+        result = engine.generate(self.prompt, 3)
+        result.memory_metrics["post_decoding"]["device_allocated_mib"] = 9.0
+        item = dict(item_id="fixture", target_context_length=40, depth_category="middle",
+                    query_type="single_fact", ground_truth_answers=["unused"])
+        row = record_result(result, item, "ogc")
+        self.assertEqual(row["compressed_kv_bytes"], result.compressed_kv_bytes)
+        self.assertEqual(row["checkpoint_max_device_allocated_mib"], 9.0)
+        self.assertEqual(row["decode_steps"], 2)
+
     def test_timing_contains_selection_and_matches_step_definition(self):
         result = self.engine(sink_tokens=2, recent_window=6, chunk_size=4).generate(self.prompt, 8)
         self.assertEqual(result.decode_steps, 7)

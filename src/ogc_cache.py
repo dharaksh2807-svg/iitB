@@ -74,20 +74,34 @@ class OGCCacheEngine(UncompressedBaselineEngine):
     def generate(self, prompt: str, max_new_tokens: int = 35,
                  temperature: float = 0.0, do_sample: bool = False) -> OGCInferenceResult:
         selected_chunks = []
+        pending_scores = None
+        history_selected = False
 
         def select(cache, attention, ids):
-            nonlocal selected_chunks
+            nonlocal selected_chunks, pending_scores, history_selected
             self._boundaries = []
             if self.selection_policy == "entity_chunks":
                 # Token-only punctuation boundaries; never benchmark answer offsets.
                 self._boundaries = [i + 1 for i, token in enumerate(ids[0].tolist())
                                     if any(c in self.tokenizer.decode([token]) for c in (".", "!", "?", "\n"))]
-            cache, _, selected_chunks = self._select_and_prune_cache(cache, attention, cache_length(cache))
+            length = cache_length(cache)
+            history_selected = length > self.budget_tokens
+            pending_scores = None if history_selected else attention
+            cache, _, selected_chunks = self._select_and_prune_cache(cache, attention, length)
             return cache, self._last_indices
 
         def prune(cache):
+            nonlocal pending_scores, history_selected, selected_chunks
+            length = cache_length(cache)
+            if not history_selected and length > self.budget_tokens:
+                scores = pending_scores
+                if scores is not None:
+                    scores = torch.nn.functional.pad(scores, (0, length - scores.numel()))
+                cache, _, selected_chunks = self._select_and_prune_cache(cache, scores, length)
+                pending_scores = None
+                history_selected = True
+                return cache, self._last_indices
             # Freeze the selected historical prefix; evict oldest local tokens.
-            # If prefill did not prune, the first S+KC tokens become this prefix.
             prefix = self.sink_tokens + self.chunk_size * self.num_chunks
             indices = prefix_recent_indices(cache_length(cache), prefix, self.recent_window)
             return retain(cache, indices), indices

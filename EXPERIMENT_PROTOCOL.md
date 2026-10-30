@@ -209,3 +209,116 @@ Before declaring subsequent phases successful, the implementation must satisfy t
 
 * **Author:** Antigravity Autonomous Research Assistant
 * **Approval Status:** Ready for execution in Phase 3 (Build the Uncompressed Baseline).
+
+## 9. Audit protocol v2 (2026-10-31; supersedes experimental claims above)
+
+Historical phase 6–8 JSON and plots are preserved verbatim. They used different
+dtypes, a 30-question suite, estimated OGC bytes, and an incorrect OGC generation
+loop. They are exploratory historical evidence, not validation of the repaired
+implementation. Current runners never merge them into fresh measurements.
+
+### Inference contract
+
+- One unpadded Qwen2 sequence with DynamicCache; pinned model and tokenizer revision
+  `989aa7980e4cf806f80c7fef2b1adb7bc71aa306`.
+- First output token is selected from the final prefill logits. Subsequent forwards
+  consume the previously generated token once, at its original absolute position.
+  The last generated token is not yet consumed and is absent from the final cache.
+- Cached RoPE keys keep their original phases. No position rebasing or rerotation.
+  Explicit absolute `position_ids`; `cache_position` is supplied when declared by
+  the model API. Transformers 5.20.1 Qwen2 does not declare it. Decode uses an
+  explicit compact all-visible mask for its single query. No static or sliding
+  architecture caches, padded batches, beam search, or dynamic RoPE scaling are
+  validated by this work.
+- Stop at configured model/tokenizer EOS or the requested generation count;
+  newline is ordinary output. Zero output tokens means prefill only; negative
+  counts and inputs beyond the consumed model context are rejected.
+- Compressed caches contain `min(consumed_tokens, B)` entries after selection and
+  each decode step. A forward can transiently allocate B+1 entries before pruning.
+  OGC freezes selected history and rotates the recent window. H2O-style retains
+  static prefill heavy hitters, not dynamically accumulated decode heavy hitters.
+
+### Memory and timing
+
+All methods use the same eager backend, BF16, greedy argmax, repetition penalty
+1.0, EOS rules, output cap, and prefill block size (default 256) in a comparison.
+All weights are shared; each measured method reruns its own prefill and decode.
+Model loading and one warmup per configuration are excluded. Config order is
+randomized independently for each question with a recorded seed.
+
+Block prefill bounds live attention outputs by O(layers × heads × block_size × L)
+instead of retaining all L×L matrices. Query observation scores and full-prefill
+H2O-style scores are accumulated and released block by block. Attention arithmetic
+is still quadratic in L. The full prompt KV is materialized before pruning:
+**this is post-prefill KV compression, not a demonstrated peak-memory saving**.
+The public direct pruning helpers still accept dense attentions for tests;
+`generate` does not request a full L×L prefill.
+
+MPS/CUDA synchronization surrounds measured work. Timings are: block prefill
+(including scoring), prefill forwards, score reduction, initial selection/pruning,
+decode forwards, decode pruning, decode wall time, TTFT, and end-to-end wall time
+(including tokenization and final text decoding). Selection time sums initial and
+decode pruning; it overlaps decode wall time and must not be added to it again.
+TTFT is wall time through initial selection and the first token's materialization.
+Decode throughput counts only subsequent forward-produced tokens (N−1, excluding
+the token obtained from prefill). Generation count and decode step count are saved.
+
+Final tensor bytes are summed from retained K/V tensors after generation. Unique
+backing-storage bytes are saved separately to detect views that retain evicted
+storage. The uncompressed counterfactual uses observed full-prefill bytes/token
+at the same *consumed* length, not the requested output cap. Actual full-baseline
+bytes are available for each paired question; different EOS lengths can make
+these differ from the counterfactual. No theoretical value is presented as a
+measured compressed cache size.
+
+MPS allocation values are checkpoint samples, not peaks. Process RSS peak is
+process-lifetime high water, not resettable per question. CUDA allocator peak is
+reset per measured generation, but CUDA is unverified on the current hardware.
+A causal claim about peak-memory reduction requires isolated processes and
+appropriate peak instrumentation; no such claim is made here.
+
+### Research matrix and uncertainty
+
+Default matrix: full baseline plus StreamingLLM-style sinks/recent (absolute RoPE,
+not the original positional-shift implementation), pure sliding window, static
+H2O-style prefill oracle approximation, OGC, query-aware individual tokens,
+seeded random contiguous chunks, adaptive chunk sizes, and punctuation-boundary
+chunks, each at B=260/516/1028 (25 conditions). OGC allocates S=4 and H=(B−4)/4
+tokens to history, with W=B−4−H recent tokens. H2O-style uses the same H and W=B−H.
+OGC uses disjoint candidate chunks, ordered by mean observation attention; its
+candidate grid differs from the historical overlapping greedy windows. The
+random control uses the identical grid and history/recent split. Run fixed C=16,
+32,64 ablations with `--chunk-size` in separate fresh output directories.
+
+Adaptive retention chooses C=16/32/64 from predeclared attention concentration
+thresholds 0.5/0.25. Boundary retention uses token punctuation to approximate
+sentence/record boundaries, with spans capped at C; it is not NER. These are
+research hypotheses, not established improvements. Selection never receives
+answers or ground-truth needle offsets. Every condition is reported, including
+negative results, together with its recall-memory Pareto status.
+
+Default synthetic suite: 4 context lengths (1K/2K/4K/8K) × 5 depths × 3 question
+types × 5 independent seeds = 300 cases. Facts are independently generated per
+case, multi-fact records occur at separated depths, and adversarial cases place
+obsolete conflicting records near the inquiry. Token counts and actual fact
+depths are measured after final chat-template tokenization. Ground truths, seeds,
+complete prompts, outputs, token IDs, retained positions, and per-step cache
+lengths are persisted. Supplied historical datasets are scored separately.
+
+Report all-facts boundary-matched accuracy, canonical exact match, strata, and
+paired accuracy differences with 2,000 seeded bootstrap resamples stratified by
+length/depth/type. Singleton pilot strata provide no resampling variance and are
+not evidence of precise uncertainty. CIs describe this synthetic population,
+not general long-context performance; no multiple-comparison adjustment is made.
+
+All policies use full-prefill logits for token 1. This token has already seen all
+facts before pruning. Report this shared-information limitation: these are
+post-prefill generation tests, not a strict demonstration that every recalled
+fact was read solely from compressed KV. Future held-out-query evaluation should
+prune before the question is consumed.
+
+Fresh outputs require a new `--output` directory. Manifests save the immutable
+revision, source hashes, git state, versions, seed, dataset hash, settings, command,
+status, and timestamps. Correctness tests precede the benchmark. No minimum
+accuracy outcome is an acceptance gate: the earlier 100% accuracy and expected
+middle-depth degradation requirements are hypotheses, not results to enforce.

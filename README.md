@@ -1,5 +1,14 @@
 # ⚡ Squeezing Long-Context Inference into Less Memory
 
+> **2026-10-31 correctness audit:** The phase 6–8 tables and plots below are
+> preserved historical results. The original OGC decode loop was incorrect;
+> those scores and timings do not validate the repaired implementation. Current
+> methods use block-prefill scoring and post-prefill KV compression. Peak-memory
+> savings remain unverified. See [RESEARCH_REPORT.md](RESEARCH_REPORT.md) and
+> [protocol v2](EXPERIMENT_PROTOCOL.md#9-audit-protocol-v2-2026-10-31-supersedes-experimental-claims-above)
+> for current evidence, limitations, and reproducible commands. H2O is a static
+> prefill oracle approximation, not dynamic H2O.
+
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.14](https://img.shields.io/badge/PyTorch-2.14.1-ee4c2c.svg)](https://pytorch.org/)
 [![Transformers](https://img.shields.io/badge/Transformers-5.20.1-yellow.svg)](https://huggingface.co/docs/transformers)
@@ -36,7 +45,7 @@ This repository provides an end-to-end, empirical research pipeline that investi
 4. **Research Contribution — Observation-Guided Chunked Cache (OGC-Cache):** A query-directed chunk retention policy designed to overcome the critical **mid-context eviction blind spot** and **token fracturing** inherent in existing token-level eviction methods.
 5. **Interactive Demonstration & Benchmark Dashboard:** A dual-mode CLI and zero-dependency web dashboard reporting real physical tensor sizes and measured hardware latencies (no fabricated or theoretical numbers).
 
-### Key Empirical Findings
+### Historical Phase 6–8 Findings (not validation of current code)
 
 Under an identical fixed memory budget of **$B = 260$ tokens** ($7.11\text{ MiB}$ physical cache, an **$85.2\% - 93.7\%$ reduction** from uncompressed baseline):
 
@@ -170,11 +179,15 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Run Automated Test Suite (21 Unit & Integration Tests)
+### 2. Run Focused Correctness Tests Before Model Benchmarks
 ```bash
-python -m unittest discover tests
+python -m unittest discover -s tests -p test_cache_correctness.py -v
+python -m unittest discover -s tests -p test_research_benchmark.py -v
+RUN_PRETRAINED_TESTS=1 python -m unittest discover -s tests -p test_cache_pretrained.py -v
 ```
-*Expected output:* `Ran 21 tests in ~70s, OK`. Validates baseline scaling, KV tensor sizing formulas, MD-NIAH dataset generation, RoPE alignment, H2O attention extraction, OGC chunk pooling, CLI modes, and server REST endpoints.
+The first two commands run without pretrained model weights. The last command
+loads the pinned 1.5B model. Full discovery also includes historical integration
+and UI tests; see the report for checks actually executed in this audit.
 
 ### 3. Run Individual Experiments
 ```bash
@@ -185,17 +198,21 @@ python run_baseline.py --scaling
 python run_compression.py --sinks 4 --window 256
 
 # Execute Phase 6 Evaluation (Full Baseline vs. 3 StreamingLLM Budgets, 120 evaluations)
-python run_phase6_evaluation.py
+python run_phase6_evaluation.py --output artifacts/phase6-fresh
 
 # Execute Phase 7 Multi-Baseline Benchmark (Baseline vs. StreamingLLM vs. Sliding Window vs. H2O)
-python run_phase7_benchmark.py
+python run_phase7_benchmark.py --output artifacts/phase7-fresh
 
 # Execute Phase 8 Research Ablation Study (OGC-Cache vs. Existing Baselines)
-python run_phase8_ablation.py
+python run_phase8_ablation.py --output artifacts/phase8-fresh
 
-# Regenerate Publication Figures from Saved Results
-python run_phase8_ablation.py --plot-only
+# Generate the independent 300-case suite without inference
+python run_research_benchmark.py --build-only --output artifacts/dataset-300-fresh
 ```
+
+Phase runners now execute fresh matched comparisons and require a new output
+directory. They never import historical phase results. The default full matrix
+has 300 questions and 25 configurations; use `--max-items 4` for a pilot.
 
 ---
 
