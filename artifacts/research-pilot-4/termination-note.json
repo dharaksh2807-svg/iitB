@@ -1,0 +1,7 @@
+{
+  "status": "failed_before_measurement",
+  "original_manifest_unchanged": true,
+  "observed_error": "RuntimeError: Resolved revision differs: None",
+  "evidence_log": "../audit/pilot-benchmark.txt",
+  "note": "Early runner failed before its status handler. No output records were produced. The original running status is historical metadata, not an active process."
+}

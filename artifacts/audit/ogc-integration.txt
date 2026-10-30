@@ -1,0 +1,20 @@
+W1031 01:16:07.567000 33387 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 5955.42it/s]
+test_01_ogc_cache_physical_sizing (test_ogc_cache.TestOGCCacheEngine.test_01_ogc_cache_physical_sizing)
+Verifies that OGC-Cache bounds physical tensor shape to exact budget. ... ok
+test_02_query_guided_chunk_selection (test_ogc_cache.TestOGCCacheEngine.test_02_query_guided_chunk_selection)
+Verifies that synthetic query attention successfully isolates the target chunk. ... ok
+test_03_inference_execution (test_ogc_cache.TestOGCCacheEngine.test_03_inference_execution)
+Verifies end-to-end execution of generate() with OGC-Cache. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 14.640s
+
+OK
+[BaselineEngine] Model loaded in 10.45s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+  -> test_01_ogc_cache_physical_sizing passed (4702208 bytes, 164 tokens).
+  -> test_02_query_guided_chunk_selection passed. Chunk 36..68 contains target 45.
+  -> test_03_inference_execution passed. Output: ' 100'

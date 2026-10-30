@@ -1,0 +1,38 @@
+{
+  "entity_chunks/B260 minus ogc/B260/C64": {
+    "delta_accuracy_pp": 23.80952380952381,
+    "paired_bootstrap_95_ci_pp": [
+      19.047619047619047,
+      28.571428571428573
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  },
+  "adaptive_chunks/B260 minus ogc/B260/C64": {
+    "delta_accuracy_pp": 9.523809523809524,
+    "paired_bootstrap_95_ci_pp": [
+      4.761904761904762,
+      14.285714285714286
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  },
+  "entity_chunks/B260 minus adaptive_chunks/B260": {
+    "delta_accuracy_pp": 14.285714285714286,
+    "paired_bootstrap_95_ci_pp": [
+      10.476190476190476,
+      19.047619047619047
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  }
+}

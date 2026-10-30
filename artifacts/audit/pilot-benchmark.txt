@@ -1,0 +1,12 @@
+W1031 01:21:09.884000 34124 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 7182.32it/s]
+[BaselineEngine] Model loaded in 4.34s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+Traceback (most recent call last):
+  File "/Users/dharaksh/Desktop/iitB/run_research_benchmark.py", line 208, in <module>
+    main()
+  File "/Users/dharaksh/Desktop/iitB/run_research_benchmark.py", line 170, in main
+    raise RuntimeError(f"Resolved revision differs: {resolved_revision}")
+RuntimeError: Resolved revision differs: None

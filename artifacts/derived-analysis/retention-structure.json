@@ -1,0 +1,71 @@
+{
+  "ogc/B260/C64": {
+    "mean_contiguous_history_runs": 1.0,
+    "selected_span_length_histogram": {
+      "64": 105
+    },
+    "note": "Actual selected span lengths, including partial fills; not inferred adaptive C or semantic entity quality"
+  },
+  "random_chunks/B260/C64": {
+    "mean_contiguous_history_runs": 1.0,
+    "selected_span_length_histogram": {
+      "64": 105
+    },
+    "note": "Actual selected span lengths, including partial fills; not inferred adaptive C or semantic entity quality"
+  },
+  "query_tokens/B260": {
+    "mean_contiguous_history_runs": 22.438095238095237,
+    "selected_span_length_histogram": {
+      "1": 6720
+    },
+    "note": "Actual selected span lengths, including partial fills; not inferred adaptive C or semantic entity quality"
+  },
+  "adaptive_chunks/B260": {
+    "mean_contiguous_history_runs": 2.257142857142857,
+    "selected_span_length_histogram": {
+      "3": 1,
+      "5": 1,
+      "11": 1,
+      "13": 1,
+      "16": 310,
+      "32": 54
+    },
+    "note": "Actual selected span lengths, including partial fills; not inferred adaptive C or semantic entity quality"
+  },
+  "entity_chunks/B260": {
+    "mean_contiguous_history_runs": 5.542857142857143,
+    "selected_span_length_histogram": {
+      "1": 23,
+      "2": 362,
+      "3": 125,
+      "4": 14,
+      "5": 89,
+      "6": 11,
+      "7": 13,
+      "8": 7,
+      "9": 39,
+      "10": 95,
+      "11": 2,
+      "12": 5,
+      "13": 4,
+      "14": 2,
+      "15": 4,
+      "16": 1,
+      "17": 8,
+      "18": 2,
+      "19": 1,
+      "20": 7,
+      "22": 1,
+      "24": 1,
+      "25": 3,
+      "26": 4,
+      "27": 10,
+      "28": 9,
+      "29": 31,
+      "30": 34,
+      "31": 10,
+      "38": 1
+    },
+    "note": "Actual selected span lengths, including partial fills; not inferred adaptive C or semantic entity quality"
+  }
+}

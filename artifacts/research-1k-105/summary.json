@@ -1,0 +1,879 @@
+{
+  "adaptive_chunks/B260": {
+    "total": 105,
+    "accuracy_pct": 55.23809523809524,
+    "exact_match_pct": 10.476190476190476,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 55.23809523809524,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 14.285714285714285,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 95.23809523809523,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 42.857142857142854,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 57.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 80.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 65.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 492.7257741479913,
+    "mean_scoring_time_ms": 9.062320586027843,
+    "mean_selection_time_ms": 145.48588286686157,
+    "mean_ttft_ms": 505.2095078419717,
+    "mean_decode_time_ms": 858.9908011789832,
+    "mean_total_time_ms": 1364.4487277427245,
+    "decode_tokens_per_sec": 24.535990894504287,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -29.523809523809526,
+      "paired_bootstrap_95_ci_pp": [
+        -34.285714285714285,
+        -23.80952380952381
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": 37.142857142857146,
+        "paired_bootstrap_95_ci_pp": [
+          30.476190476190474,
+          42.880952380952245
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": 41.904761904761905,
+        "paired_bootstrap_95_ci_pp": [
+          36.19047619047619,
+          47.61904761904762
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "entity_chunks/B260": {
+    "total": 105,
+    "accuracy_pct": 69.52380952380952,
+    "exact_match_pct": 15.238095238095239,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 69.52380952380952,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 57.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 95.23809523809523,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 57.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 76.19047619047619,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 61.904761904761905,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 80.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 31.428571428571427,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 97.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 485.1624047117574,
+    "mean_scoring_time_ms": 8.757538091213931,
+    "mean_selection_time_ms": 154.97103170824371,
+    "mean_ttft_ms": 501.318829324806,
+    "mean_decode_time_ms": 898.7977352625292,
+    "mean_total_time_ms": 1400.3655134434146,
+    "decode_tokens_per_sec": 24.74204636441338,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -15.238095238095237,
+      "paired_bootstrap_95_ci_pp": [
+        -20.0,
+        -9.523809523809524
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": 51.42857142857143,
+        "paired_bootstrap_95_ci_pp": [
+          44.76190476190476,
+          58.095238095238095
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": 56.19047619047619,
+        "paired_bootstrap_95_ci_pp": [
+          50.476190476190474,
+          61.904761904761905
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": true
+  },
+  "full": {
+    "total": 105,
+    "accuracy_pct": 84.76190476190476,
+    "exact_match_pct": 34.285714285714285,
+    "mean_kv_bytes": 29971797.333333332,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 84.76190476190476,
+        "mean_kv_bytes": 29971797.333333332
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 76.19047619047619,
+        "mean_kv_bytes": 29986816.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 95.23809523809523,
+        "mean_kv_bytes": 29940394.666666668
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 76.19047619047619,
+        "mean_kv_bytes": 30010026.666666668
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 80.95238095238095,
+        "mean_kv_bytes": 29996373.333333332
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 95.23809523809523,
+        "mean_kv_bytes": 29925376.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 68.57142857142857,
+        "mean_kv_bytes": 30167859.2
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 88.57142857142857,
+        "mean_kv_bytes": 29655859.2
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 97.14285714285714,
+        "mean_kv_bytes": 30091673.6
+      }
+    },
+    "mean_prefill_time_ms": 479.1664543583812,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 0.11108608228997105,
+    "mean_ttft_ms": 482.2468563426463,
+    "mean_decode_time_ms": 872.3236440237434,
+    "mean_total_time_ms": 1354.839967455094,
+    "decode_tokens_per_sec": 24.390248529835066,
+    "paired_vs_full": {
+      "delta_accuracy_pp": 0.0,
+      "paired_bootstrap_95_ci_pp": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "pareto_nondominated": true
+  },
+  "h2o_prefill_approx/B260": {
+    "total": 105,
+    "accuracy_pct": 13.333333333333334,
+    "exact_match_pct": 1.9047619047619049,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 13.333333333333334,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 564.3511630650166,
+    "mean_scoring_time_ms": 81.85341114821355,
+    "mean_selection_time_ms": 136.39879711194052,
+    "mean_ttft_ms": 570.1982229970218,
+    "mean_decode_time_ms": 848.104350456214,
+    "mean_total_time_ms": 1418.564494419843,
+    "decode_tokens_per_sec": 24.60389061256675,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -71.42857142857143,
+      "paired_bootstrap_95_ci_pp": [
+        -77.14285714285714,
+        -65.71428571428571
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": -4.761904761904762,
+        "paired_bootstrap_95_ci_pp": [
+          -8.571428571428571,
+          -0.9523809523809523
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "ogc/B260/C64": {
+    "total": 105,
+    "accuracy_pct": 45.714285714285715,
+    "exact_match_pct": 4.761904761904762,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 45.714285714285715,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 47.61904761904761,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 57.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 23.809523809523807,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 33.33333333333333,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 60.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 77.14285714285715,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 493.5794817727236,
+    "mean_scoring_time_ms": 8.807970236410343,
+    "mean_selection_time_ms": 143.23380883960496,
+    "mean_ttft_ms": 505.9832944213191,
+    "mean_decode_time_ms": 854.0495591038572,
+    "mean_total_time_ms": 1360.2911908767142,
+    "decode_tokens_per_sec": 24.58873700729384,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -39.04761904761905,
+      "paired_bootstrap_95_ci_pp": [
+        -42.857142857142854,
+        -34.285714285714285
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": 27.61904761904762,
+        "paired_bootstrap_95_ci_pp": [
+          21.904761904761905,
+          33.333333333333336
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": 32.38095238095238,
+        "paired_bootstrap_95_ci_pp": [
+          28.571428571428573,
+          36.19047619047619
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "query_tokens/B260": {
+    "total": 105,
+    "accuracy_pct": 25.71428571428571,
+    "exact_match_pct": 1.9047619047619049,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 25.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 14.285714285714285,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 28.57142857142857,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 9.523809523809524,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 9.523809523809524,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 57.14285714285714,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 487.7857551577368,
+    "mean_scoring_time_ms": 8.709469739170302,
+    "mean_selection_time_ms": 139.91637892932408,
+    "mean_ttft_ms": 500.3248535817312,
+    "mean_decode_time_ms": 825.4407492033871,
+    "mean_total_time_ms": 1326.0219170778457,
+    "decode_tokens_per_sec": 24.62176666638222,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -59.04761904761905,
+      "paired_bootstrap_95_ci_pp": [
+        -64.76190476190476,
+        -53.333333333333336
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": 7.619047619047619,
+        "paired_bootstrap_95_ci_pp": [
+          1.9047619047619047,
+          13.333333333333334
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": 12.380952380952381,
+        "paired_bootstrap_95_ci_pp": [
+          8.571428571428571,
+          16.19047619047619
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "random_chunks/B260/C64": {
+    "total": 105,
+    "accuracy_pct": 18.095238095238095,
+    "exact_match_pct": 3.8095238095238098,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 18.095238095238095,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 9.523809523809524,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 14.285714285714285,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 22.857142857142858,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 31.428571428571427,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 484.4983872857743,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 144.87010052294605,
+    "mean_ttft_ms": 496.5378983622594,
+    "mean_decode_time_ms": 854.364060295657,
+    "mean_total_time_ms": 1351.1605729825706,
+    "decode_tokens_per_sec": 24.5908328614073,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -66.66666666666667,
+      "paired_bootstrap_95_ci_pp": [
+        -73.33333333333333,
+        -60.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "streaming/B260": {
+        "delta_accuracy_pp": 4.761904761904762,
+        "paired_bootstrap_95_ci_pp": [
+          0.9523809523809523,
+          8.571428571428571
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "sliding/B260": {
+    "total": 105,
+    "accuracy_pct": 5.714285714285714,
+    "exact_match_pct": 1.9047619047619049,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 5.714285714285714,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 28.57142857142857,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 11.428571428571429,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 5.714285714285714,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 484.2055417231417,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 172.58208527207552,
+    "mean_ttft_ms": 496.62872936487906,
+    "mean_decode_time_ms": 1041.5803984106917,
+    "mean_total_time_ms": 1538.4950856755797,
+    "decode_tokens_per_sec": 24.71518970800257,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -79.04761904761905,
+      "paired_bootstrap_95_ci_pp": [
+        -85.71428571428571,
+        -72.38095238095238
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": -12.380952380952381,
+        "paired_bootstrap_95_ci_pp": [
+          -17.142857142857142,
+          -7.619047619047619
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      },
+      "streaming/B260": {
+        "delta_accuracy_pp": -7.619047619047619,
+        "paired_bootstrap_95_ci_pp": [
+          -10.476190476190476,
+          -4.761904761904762
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  },
+  "streaming/B260": {
+    "total": 105,
+    "accuracy_pct": 13.333333333333334,
+    "exact_match_pct": 1.9047619047619049,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 105,
+        "accuracy_pct": 13.333333333333334,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "end": {
+        "n": 21,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "late_middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 21,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 35,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 35,
+        "accuracy_pct": 20.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 474.55713495257356,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 145.13019206157574,
+    "mean_ttft_ms": 486.0566808964081,
+    "mean_decode_time_ms": 861.1095364527067,
+    "mean_total_time_ms": 1347.4215313260045,
+    "decode_tokens_per_sec": 24.486680721915732,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -71.42857142857143,
+      "paired_bootstrap_95_ci_pp": [
+        -77.14285714285714,
+        -65.71428571428571
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 105,
+      "min_cases_per_stratum": 7,
+      "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {
+      "random_chunks/B260/C64": {
+        "delta_accuracy_pp": -4.761904761904762,
+        "paired_bootstrap_95_ci_pp": [
+          -8.571428571428571,
+          -0.9523809523809523
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 105,
+        "min_cases_per_stratum": 7,
+        "caveat": "Synthetic benchmark only; singleton strata have no resampling variance; no multiple-comparison adjustment"
+      }
+    },
+    "pareto_nondominated": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "ogc/B1028/C64": {
+    "correctness_agreement": 12,
+    "cases": 12,
+    "compressed_only_correct": [],
+    "full_only_correct": []
+  },
+  "adaptive_chunks/B516": {
+    "correctness_agreement": 10,
+    "cases": 12,
+    "compressed_only_correct": [
+      "20261031/4096/late_middle/adversarial/0"
+    ],
+    "full_only_correct": [
+      "20261031/1024/early_middle/multi_fact/0"
+    ]
+  },
+  "entity_chunks/B516": {
+    "correctness_agreement": 10,
+    "cases": 12,
+    "compressed_only_correct": [
+      "20261031/4096/late_middle/adversarial/0"
+    ],
+    "full_only_correct": [
+      "20261031/1024/early_middle/multi_fact/0"
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "config": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "device": "mps",
+    "dtype": "bfloat16",
+    "budgets": [
+      260,
+      516,
+      1028
+    ],
+    "lengths": [
+      1024,
+      2048,
+      4096,
+      8192
+    ],
+    "policies": [
+      "full",
+      "streaming",
+      "sliding",
+      "h2o_prefill_approx",
+      "ogc",
+      "query_tokens",
+      "random_chunks",
+      "adaptive_chunks",
+      "entity_chunks"
+    ],
+    "repeats": 1,
+    "seed": 20261031,
+    "chunk_size": 64,
+    "prefill_chunk_size": 256,
+    "max_new_tokens": 35,
+    "dataset": null,
+    "max_items": 4,
+    "build_only": false,
+    "output": "artifacts/research-pilot-4"
+  },
+  "started_at": "2026-10-31T01:21:12.795984+05:30",
+  "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --max-items 4 --repeats 1 --output artifacts/research-pilot-4",
+  "git_commit": "67c8cf5fdfdec84cb95e547793c737eda89d0a11",
+  "git_status": " M run_phase6_evaluation.py\n M run_phase7_benchmark.py\n M run_phase8_ablation.py\n?? artifacts/\n?? run_research_benchmark.py\n?? src/research.py\n?? tests/test_research_benchmark.py\n",
+  "source_sha256": {
+    "src/__init__.py": "2c6642a0b786bb8c2d3536963f40f62ec32e8f37d94aef69c2a09286b8fdd857",
+    "src/baseline.py": "2e5889f5e4a31086ba4ba4a0d5aa3b203fab44c96a33381f9282c463f7ac5be3",
+    "src/dataset.py": "e374f9ed45eb35fbbeb12651f50901aee54d4c2f2f4340b193ad87ef2acc16e9",
+    "src/generation.py": "992c174a1caaf7ffd258fd7c2a2bc5f2823b901f9be1ce7ea980ea265315813e",
+    "src/h2o_cache.py": "c82f35eb768d30d4c4ea7c241f1ace92714c757d1e1c26e0eba7138ca91c6cd6",
+    "src/metrics.py": "d8dcfefa6a62d74820d58f855ca6bc855102f9a7266a8c71fb211149fd3bbd9a",
+    "src/ogc_cache.py": "dec63c4b34eeabc9928c739aa39d7e2a856f964cc16f1869b019b02ce6624d52",
+    "src/research.py": "35411a8c0aafb9c04599c091d56fbf98ae564bd1570e30366cb289d418e6f02a",
+    "src/selection.py": "8eabddb5d6898ffde839c3faaa0e7efea55aa6279362b7462fe974b736eb7a72",
+    "src/server.py": "099101cd5885ac7cfb0c631388897bf7aff958b8762b6063fb914924e40c2cb7",
+    "src/sliding_cache.py": "cf114570c67071cdbcad433733727ba61104d317309e61aa428ac5447f449f16",
+    "src/streaming_cache.py": "6e19bea1d5eb6aeacbfb4525d6eabe570f50b3694d2d6234935bb9ed6e6a01dc",
+    "/Users/dharaksh/Desktop/iitB/run_research_benchmark.py": "73ce01fb379a151806fa3720d80ca3f66a6e3cf55a94faf97732652fec25f9dc"
+  },
+  "dataset_sha256": "6448ffaf24f270d85989a365d53bd11c599b75652afa8d82c0958a06da62f3c3",
+  "python": "3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "versions": {
+    "torch": "2.14.1",
+    "transformers": "5.20.1",
+    "numpy": "2.5.4",
+    "tokenizers": "0.23.3",
+    "safetensors": "0.8.0"
+  },
+  "device": "mps",
+  "attention_backend": "eager",
+  "cases": 4,
+  "prompt_format": "tokenizer chat template, single user message",
+  "generation_settings": {
+    "do_sample": false,
+    "temperature": 0.0,
+    "repetition_penalty": 1.0,
+    "stop": "model/tokenizer EOS only; no implicit newline stop"
+  },
+  "prefill_scope": "full prompt KV; block attention; post-prefill pruning",
+  "memory_note": "MPS allocations are checkpoints, RSS peak is process lifetime; neither is a per-run peak. CUDA peak reset per question.",
+  "first_token_note": "All policies use full-prefill logits for token 1. Recall includes this shared full-context information.",
+  "warmup": "one 4-token generation per config on first evaluated document, excluded from results",
+  "status": "running"
+}

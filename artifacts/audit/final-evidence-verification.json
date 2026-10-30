@@ -1,0 +1,16 @@
+{
+  "verified_outputs": 1875,
+  "unique_questions": 114,
+  "distinct_passing_tests": 40,
+  "studies": [
+    "research-1k-105",
+    "research-matched-12",
+    "research-chunks32-105",
+    "research-chunks16-105"
+  ],
+  "derived_analysis_reproduced": true,
+  "historical_results_and_datasets_unchanged": true,
+  "ui_unchanged": true,
+  "report_links_resolve": true,
+  "base_commit": "edc8dd0d6930e7200ab3229c0e61b2d48c5d2d4a"
+}

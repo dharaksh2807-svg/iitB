@@ -1,0 +1,10 @@
+{
+  "directory": "artifacts/research-matched-12",
+  "cases": 12,
+  "outputs": 300,
+  "configurations": 25,
+  "bytes_per_token": 28672,
+  "independently_seeded_cases": 12,
+  "checks": "dataset hash, exact question/config pairing, raw output decoding/scoring, per-step budgets, absolute positions, physical bytes vs independent model geometry, timing decomposition, first-token agreement, summary accuracy",
+  "passed": true
+}

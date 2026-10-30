@@ -1,0 +1,39 @@
+{
+  "ogc/B260/C64 minus random_chunks/B260/C64": {
+    "delta_accuracy_pp": 0.9523809523809523,
+    "paired_bootstrap_95_ci_pp": [
+      0.0,
+      2.857142857142857
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  },
+  "entity_chunks/B260 minus ogc/B260/C64": {
+    "delta_accuracy_pp": 10.476190476190476,
+    "paired_bootstrap_95_ci_pp": [
+      6.666666666666667,
+      14.285714285714286
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  },
+  "entity_chunks/B260 minus full": {
+    "delta_accuracy_pp": -19.047619047619047,
+    "paired_bootstrap_95_ci_pp": [
+      -22.857142857142858,
+      -15.238095238095237
+    ],
+    "bootstrap_samples": 2000,
+    "bootstrap_seed": 17,
+    "independent_pairs": 105,
+    "min_cases_per_stratum": 7,
+    "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+  },
+  "note": "Derived normalized canonical exact-match contrasts; raw recorded fields were not modified."
+}

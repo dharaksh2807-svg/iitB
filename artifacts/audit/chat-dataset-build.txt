@@ -1,0 +1,2 @@
+W1031 01:27:15.301000 34952 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Built 300 cases in artifacts/research-chat-dataset-300; no inference performed

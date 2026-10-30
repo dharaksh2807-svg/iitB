@@ -1,0 +1,25 @@
+W1031 01:16:07.770000 33398 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+
+[TestBaseline] Initializing UncompressedBaselineEngine...
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.float16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:00<04:19,  1.30it/s]Loading weights:   8%|▊         | 27/338 [00:01<00:10, 30.79it/s]Loading weights:  12%|█▏        | 39/338 [00:01<00:08, 37.20it/s]Loading weights:  15%|█▌        | 51/338 [00:01<00:06, 47.04it/s]Loading weights:  19%|█▊        | 63/338 [00:01<00:04, 56.60it/s]Loading weights:  22%|██▏       | 75/338 [00:01<00:04, 63.06it/s]Loading weights:  26%|██▌       | 87/338 [00:02<00:06, 41.26it/s]Loading weights:  29%|██▉       | 99/338 [00:02<00:05, 41.93it/s]Loading weights:  33%|███▎      | 111/338 [00:02<00:05, 41.74it/s]Loading weights:  36%|███▋      | 123/338 [00:03<00:05, 41.68it/s]Loading weights:  40%|███▉      | 135/338 [00:03<00:04, 46.46it/s]Loading weights:  43%|████▎     | 147/338 [00:03<00:03, 53.57it/s]Loading weights:  47%|████▋     | 159/338 [00:03<00:03, 56.88it/s]Loading weights:  51%|█████     | 171/338 [00:03<00:02, 61.25it/s]Loading weights:  54%|█████▍    | 183/338 [00:03<00:02, 62.94it/s]Loading weights:  58%|█████▊    | 195/338 [00:04<00:02, 60.11it/s]Loading weights:  61%|██████    | 207/338 [00:04<00:02, 62.22it/s]Loading weights:  65%|██████▍   | 219/338 [00:04<00:03, 36.66it/s]Loading weights:  68%|██████▊   | 231/338 [00:05<00:02, 42.40it/s]Loading weights:  72%|███████▏  | 243/338 [00:05<00:01, 48.17it/s]Loading weights:  75%|███████▌  | 255/338 [00:05<00:01, 55.56it/s]Loading weights:  79%|███████▉  | 267/338 [00:05<00:01, 58.58it/s]Loading weights:  83%|████████▎ | 279/338 [00:05<00:01, 58.03it/s]Loading weights:  86%|████████▌ | 291/338 [00:06<00:00, 55.02it/s]Loading weights:  90%|████████▉ | 303/338 [00:06<00:00, 45.27it/s]Loading weights:  93%|█████████▎| 315/338 [00:06<00:00, 35.09it/s]Loading weights:  97%|█████████▋| 327/338 [00:07<00:00, 42.10it/s]Loading weights: 100%|██████████| 338/338 [00:07<00:00, 47.05it/s]
+test_01_model_architecture_and_parameters (test_baseline.TestBaselineInference.test_01_model_architecture_and_parameters)
+Verify model parameters match Qwen2.5-1.5B specs. ... ok
+test_02_kv_cache_formula_conformance (test_baseline.TestBaselineInference.test_02_kv_cache_formula_conformance)
+Verify that calculate_kv_cache_bytes matches theoretical formula exactly. ... ok
+test_03_baseline_generation_and_timing (test_baseline.TestBaselineInference.test_03_baseline_generation_and_timing)
+Verify uncompressed baseline generation produces valid output and distinct timings. ... ok
+test_04_prefill_and_decode_memory_checkpoints (test_baseline.TestBaselineInference.test_04_prefill_and_decode_memory_checkpoints)
+Verify memory checkpoints exist and distinguish phases. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 22.620s
+
+OK
+[BaselineEngine] Model loaded in 20.54s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+  -> test_01_model_architecture_and_parameters passed.
+  -> test_02_kv_cache_formula_conformance passed (Exact 2,867,200 bytes).
+  -> test_03_baseline_generation_and_timing passed. Output: '15 + 25 = 40. Question: What' | KV match: 100.00%
+  -> test_04_prefill_and_decode_memory_checkpoints passed.

@@ -1,0 +1,78 @@
+{
+  "total_distinct_tests": 40,
+  "runs": [
+    {
+      "test_file": "tests/test_cache_correctness.py",
+      "log": "artifacts/audit/focused-accounting-final.txt",
+      "tests": 17,
+      "duration_seconds": 0.292,
+      "passed": true,
+      "sha256": "4af929de4535641dba82a7220a4b2ea3a0d02e821672b745a9890d47f0043fe0",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_cache_correctness.py -v"
+    },
+    {
+      "test_file": "tests/test_cache_pretrained.py",
+      "log": "artifacts/audit/pretrained-final.txt",
+      "tests": 2,
+      "duration_seconds": 54.32,
+      "passed": true,
+      "sha256": "7bfbe9a6ac692651c8b95829e98d950210f7588766d37734e7ce7562ab3765f2",
+      "command": "RUN_PRETRAINED_TESTS=1 .venv/bin/python -m unittest discover -s tests -p test_cache_pretrained.py -v"
+    },
+    {
+      "test_file": "tests/test_research_benchmark.py",
+      "log": "artifacts/audit/research-statistics-final.txt",
+      "tests": 4,
+      "duration_seconds": 0.2,
+      "passed": true,
+      "sha256": "b7f735638d0d1cbb4614ecdefca9d0a60ac880af4ad8ef7a58465dbd4137cb3d",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_research_benchmark.py -v"
+    },
+    {
+      "test_file": "tests/test_baseline.py",
+      "log": "artifacts/audit/baseline-integration.txt",
+      "tests": 4,
+      "duration_seconds": 22.62,
+      "passed": true,
+      "sha256": "17f82d175fd47b022e0b42153d32d8d05e3b8280b531d58e68720cdfd86717f6",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_baseline.py -v"
+    },
+    {
+      "test_file": "tests/test_streaming_cache.py",
+      "log": "artifacts/audit/streaming-integration.txt",
+      "tests": 3,
+      "duration_seconds": 8.042,
+      "passed": true,
+      "sha256": "9a7bb62f80bb77a4ccdc66f2ba95919626949f41ccd3b33d1f22c9c8357328d9",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_streaming_cache.py -v"
+    },
+    {
+      "test_file": "tests/test_additional_baselines.py",
+      "log": "artifacts/audit/additional-integration.txt",
+      "tests": 3,
+      "duration_seconds": 24.361,
+      "passed": true,
+      "sha256": "0685df58b7d1ccf244102f9266ea014d35520f791ca6dc504fbf4bc50f95c10e",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_additional_baselines.py -v"
+    },
+    {
+      "test_file": "tests/test_ogc_cache.py",
+      "log": "artifacts/audit/ogc-integration.txt",
+      "tests": 3,
+      "duration_seconds": 14.64,
+      "passed": true,
+      "sha256": "10e2483407161a0a3fd0dff556e0702505df846b44dfe7be88f25fc8b8b58696",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_ogc_cache.py -v"
+    },
+    {
+      "test_file": "tests/test_benchmark_dataset.py",
+      "log": "artifacts/audit/historical-dataset-tests.txt",
+      "tests": 4,
+      "duration_seconds": 1.212,
+      "passed": true,
+      "sha256": "203ed4a10630a832158ff8618329bdd5b7333f0c72f9f713eeb3fcb67170bc8b",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_benchmark_dataset.py -v"
+    }
+  ],
+  "note": "Selected successful executions across audit commits. Not a claim that full UI/server discovery ran. Earlier development failure logs are preserved separately."
+}

@@ -1,0 +1,39 @@
+W1031 01:19:18.934000 33898 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 6504.59it/s]
+test_long_decode_physical_budget_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_long_decode_physical_budget_and_first_token) ... ERROR
+test_no_pruning_agrees_with_hf_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_no_pruning_agrees_with_hf_and_first_token) ... FAIL
+
+======================================================================
+ERROR: test_long_decode_physical_budget_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_long_decode_physical_budget_and_first_token)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/dharaksh/Desktop/iitB/tests/test_cache_pretrained.py", line 34, in test_long_decode_physical_budget_and_first_token
+    with patch.object(engine.model.generation_config, "eos_token_id", None), patch.object(engine.tokenizer, "eos_token_id", None):
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1605, in __exit__
+    delattr(self.target, self.attribute)
+AttributeError: 'Qwen2Tokenizer' object has no attribute 'eos_token_id'
+
+======================================================================
+FAIL: test_no_pruning_agrees_with_hf_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_no_pruning_agrees_with_hf_and_first_token)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/dharaksh/Desktop/iitB/tests/test_cache_pretrained.py", line 28, in test_no_pruning_agrees_with_hf_and_first_token
+    self.assertEqual(self.base.generate(prompt, 12).generated_token_ids, expected)
+AssertionError: Lists differ: [220, 16, 20, 488, 220, 17, 20, 284, 220, 19, 15, 13] != [2014, 1477, 279, 2629, 315, 220, 16, 20, 323, 220, 17, 20]
+
+First differing element 0:
+220
+2014
+
+- [220, 16, 20, 488, 220, 17, 20, 284, 220, 19, 15, 13]
++ [2014, 1477, 279, 2629, 315, 220, 16, 20, 323, 220, 17, 20]
+
+----------------------------------------------------------------------
+Ran 2 tests in 16.937s
+
+FAILED (failures=1, errors=1)
+[BaselineEngine] Model loaded in 5.63s | Params: 1,543,714,304 | Weights: 2944.4 MiB
