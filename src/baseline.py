@@ -36,7 +36,7 @@ class BaselineInferenceResult(GenerationTelemetry):
     prefill_time_ms: float
     decode_time_ms: float
     total_time_ms: float
-    ttft_ms: float
+    ttft_ms: Optional[float]
     decode_tokens_per_sec: float
     kv_cache_bytes: int
     kv_cache_mib: float
@@ -190,9 +190,17 @@ class UncompressedBaselineEngine:
     ) -> BaselineInferenceResult:
         r = run_generation(self, prompt, max_new_tokens, temperature, do_sample)
         actual = r.pop("compressed_kv_bytes")
-        theo = r.pop("uncompressed_kv_bytes")
+        r.pop("uncompressed_kv_bytes")
         r.pop("kv_cache_savings_pct")
-        r.pop("actual_cached_tokens")
+        cached_tokens = r.pop("actual_cached_tokens")
+        # Keep this independent of observed bytes/token: otherwise the scaling
+        # check would pass tautologically even for an incorrectly measured cache.
+        cfg = self.model.config
+        theo = theoretical_kv_cache_bytes(
+            num_layers=cfg.num_hidden_layers,
+            num_kv_heads=getattr(cfg, "num_key_value_heads", cfg.num_attention_heads),
+            head_dim=getattr(cfg, "head_dim", None) or cfg.hidden_size // cfg.num_attention_heads,
+            element_size=self.element_size, seq_len=cached_tokens)
         telemetry = r.pop("telemetry")
         return BaselineInferenceResult(
             prompt=prompt, **r, **telemetry, kv_cache_bytes=actual,

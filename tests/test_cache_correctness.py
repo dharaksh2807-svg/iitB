@@ -250,6 +250,16 @@ class CacheCorrectness(unittest.TestCase):
         self.assertEqual(row["checkpoint_max_device_allocated_mib"], 9.0)
         self.assertEqual(row["decode_steps"], 2)
 
+    def test_baseline_scaling_check_is_independent_of_measured_bytes(self):
+        engine = self.engine(UncompressedBaselineEngine)
+        def corrupted_measurement(cache):
+            size, layers, meta = calculate_kv_cache_bytes(cache)
+            return size * 2, layers, meta
+        with patch("src.generation.calculate_kv_cache_bytes", side_effect=corrupted_measurement):
+            result = engine.generate(self.prompt, 3)
+        self.assertEqual(result.theoretical_kv_bytes, 2 * 2 * 2 * 42 * 8 * 4)
+        self.assertEqual(result.kv_scaling_match_pct, 0.0)
+
     def test_timing_contains_selection_and_matches_step_definition(self):
         result = self.engine(sink_tokens=2, recent_window=6, chunk_size=4).generate(self.prompt, 8)
         self.assertEqual(result.decode_steps, 7)

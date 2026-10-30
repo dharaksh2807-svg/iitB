@@ -34,7 +34,7 @@ class OGCInferenceResult(GenerationTelemetry):
     uncompressed_kv_bytes: int
     compressed_kv_bytes: int
     kv_cache_savings_pct: float
-    memory_metrics: Dict[str, float]
+    memory_metrics: Dict[str, Any]
 
 
 class OGCCacheEngine(UncompressedBaselineEngine):

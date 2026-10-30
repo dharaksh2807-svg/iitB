@@ -38,7 +38,7 @@ class StreamingInferenceResult(GenerationTelemetry):
     prefill_time_ms: float
     decode_time_ms: float
     total_time_ms: float
-    ttft_ms: float
+    ttft_ms: Optional[float]
     decode_tokens_per_sec: float
     uncompressed_kv_bytes: int
     compressed_kv_bytes: int

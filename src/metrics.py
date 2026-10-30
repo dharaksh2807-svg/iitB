@@ -64,7 +64,9 @@ def get_device_driver_bytes(device: torch.device) -> int:
 
 def calculate_kv_cache_bytes(past_key_values: Any) -> Tuple[int, int, Dict[str, Any]]:
     """
-    Directly calculate the physical memory occupied by retained Key and Value cache tensors.
+    Measure retained K/V tensor payload bytes, with unique backing storage in meta.
+    Compact caches have equal payload/storage bytes. Views may keep larger backing
+    allocations alive; aliases can share storage. Neither includes allocator overhead.
     
     Formula:
         Total Bytes = sum_l (numel(K_l) * element_size(K_l) + numel(V_l) * element_size(V_l))
@@ -173,7 +175,8 @@ class MemoryCheckpoint:
 class MemoryTracker:
     """
     Tracks memory across inference checkpoints to clearly separate
-    model-weight overhead, prefill peaks, cache retention, and decoding.
+    model-weight overhead, prefill checkpoints, cache retention, and decoding.
+    Checkpoint sampling does not measure peaks between calls.
     """
     def __init__(self, device: torch.device):
         self.device = device
