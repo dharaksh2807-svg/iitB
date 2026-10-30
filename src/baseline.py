@@ -11,7 +11,10 @@ from typing import Dict, Any, Optional, List, Tuple
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, PreTrainedModel, PreTrainedTokenizer
 
+from src.generation import (GenerationTelemetry, DEFAULT_MODEL, DEFAULT_REVISION, run_generation)
+
 from src.metrics import (
+    checkpoint_device_mib,
     MemoryTracker,
     MemoryCheckpoint,
     calculate_kv_cache_bytes,
@@ -24,7 +27,7 @@ from src.metrics import (
 
 
 @dataclass
-class BaselineInferenceResult:
+class BaselineInferenceResult(GenerationTelemetry):
     prompt: str
     output_text: str
     input_tokens: int
@@ -54,11 +57,16 @@ class BaselineInferenceResult:
             "generated_tokens": self.generated_tokens,
             "total_tokens": self.total_tokens,
             "output_text": self.output_text,
+            "telemetry": {name: getattr(self, name) for name in GenerationTelemetry.__dataclass_fields__},
             "timings": {
+                "selection_time_ms": self.selection_time_ms,
+                "initial_selection_time_ms": self.initial_selection_time_ms,
+                "decode_pruning_time_ms": self.decode_pruning_time_ms,
+                "decode_forward_time_ms": self.decode_forward_time_ms,
                 "prefill_time_ms": round(self.prefill_time_ms, 2),
                 "decode_time_ms": round(self.decode_time_ms, 2),
                 "total_time_ms": round(self.total_time_ms, 2),
-                "ttft_ms": round(self.ttft_ms, 2),
+                "ttft_ms": round(self.ttft_ms, 2) if self.ttft_ms is not None else None,
                 "decode_tokens_per_sec": round(self.decode_tokens_per_sec, 2),
             },
             "memory": {
@@ -85,9 +93,14 @@ class UncompressedBaselineEngine:
         model_name_or_path: str = "Qwen/Qwen2.5-1.5B-Instruct",
         device: Optional[str] = None,
         dtype: torch.dtype = torch.float16,
+        revision: Optional[str] = None,
+        attn_implementation: str = "sdpa",
     ):
         self.model_name = model_name_or_path
         self.dtype = dtype
+        self.revision = revision or (DEFAULT_REVISION if self.model_name == DEFAULT_MODEL else None)
+        self.attn_implementation = attn_implementation
+        self.prefill_chunk_size = 256
 
         # Device selection: prefer MPS on Apple Silicon, fallback to CPU
         if device is None:
@@ -120,27 +133,13 @@ class UncompressedBaselineEngine:
         load_start = time.time()
 
         print(f"[BaselineEngine] Loading tokenizer: {self.model_name}")
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True, revision=self.revision)
 
         print(f"[BaselineEngine] Loading model weights (dtype={self.dtype})")
-        try:
-            self.model = AutoModelForCausalLM.from_pretrained(
-                self.model_name,
-                dtype=self.dtype,
-                device_map=None,
-            ).to(self.device)
-        except Exception as e:
-            if self.device.type == "mps":
-                print(f"[BaselineEngine] MPS load failed ({e}); falling back to CPU.")
-                self.device = torch.device("cpu")
-                self.memory_tracker.device = self.device
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name,
-                    dtype=self.dtype,
-                    device_map=None,
-                ).to(self.device)
-            else:
-                raise e
+        self.model = AutoModelForCausalLM.from_pretrained(
+            self.model_name, revision=self.revision, attn_implementation=self.attn_implementation,
+            dtype=self.dtype, device_map=None,
+        ).to(self.device)
 
         self.model.eval()
         self.sync_device()
@@ -189,143 +188,20 @@ class UncompressedBaselineEngine:
         temperature: float = 0.0,
         do_sample: bool = False,
     ) -> BaselineInferenceResult:
-        """
-        Executes reference uncompressed autoregressive generation.
-        Separates prefill phase and token decoding loop with individual timing and memory telemetry.
-        """
-        if self.model is None or self.tokenizer is None:
-            raise RuntimeError("Model is not loaded. Call load_model() first.")
-
-        # Tokenize prompt
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-        input_ids = inputs["input_ids"]
-        input_tokens = input_ids.shape[1]
-
-        if input_tokens > self.max_context_length:
-            raise ValueError(
-                f"Prompt length ({input_tokens} tokens) exceeds model maximum context ({self.max_context_length} tokens)."
-            )
-
-        # Fresh tracker for this inference invocation
-        tracker = MemoryTracker(self.device)
-        tracker.record("inference_start")
-
-        # ----------------------------------------------------
-        # Phase 1: Prefill (Prompt Encoding & Initial KV Cache)
-        # ----------------------------------------------------
-        self.sync_device()
-        t_prefill_start = time.perf_counter()
-
-        with torch.no_grad():
-            outputs = self.model(**inputs, use_cache=True)
-
-        self.sync_device()
-        t_prefill_end = time.perf_counter()
-        prefill_time_ms = (t_prefill_end - t_prefill_start) * 1000.0
-
-        past_key_values = outputs.past_key_values
-        tracker.record("post_prefill", past_key_values)
-
-        # First token selection
-        next_token_logits = outputs.logits[:, -1, :]
-        if do_sample and temperature > 0.0:
-            probs = torch.softmax(next_token_logits / temperature, dim=-1)
-            next_token = torch.multinomial(probs, num_samples=1)
-        else:
-            next_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-
-        ttft_ms = prefill_time_ms
-        generated_token_ids: List[int] = [int(next_token[0, 0].item())]
-
-        # ----------------------------------------------------
-        # Phase 2: Autoregressive Decoding Loop
-        # ----------------------------------------------------
-        t_decode_start = time.perf_counter()
-        eos_token_id = self.tokenizer.eos_token_id
-
-        with torch.no_grad():
-            for step in range(max_new_tokens - 1):
-                if generated_token_ids[-1] == eos_token_id:
-                    break
-
-                out_step = self.model(
-                    input_ids=next_token,
-                    past_key_values=past_key_values,
-                    use_cache=True,
-                )
-                past_key_values = out_step.past_key_values
-
-                step_logits = out_step.logits[:, -1, :]
-                if do_sample and temperature > 0.0:
-                    probs = torch.softmax(step_logits / temperature, dim=-1)
-                    next_token = torch.multinomial(probs, num_samples=1)
-                else:
-                    next_token = torch.argmax(step_logits, dim=-1, keepdim=True)
-
-                generated_token_ids.append(int(next_token[0, 0].item()))
-
-        self.sync_device()
-        t_decode_end = time.perf_counter()
-        decode_time_ms = (t_decode_end - t_decode_start) * 1000.0
-        total_time_ms = prefill_time_ms + decode_time_ms
-
-        generated_tokens = len(generated_token_ids)
-        total_tokens = input_tokens + generated_tokens
-        decode_tokens_per_sec = (generated_tokens / (decode_time_ms / 1000.0)) if decode_time_ms > 0 else 0.0
-
-        tracker.record("post_decoding", past_key_values)
-
-        # ----------------------------------------------------
-        # Phase 3: KV Cache Tensor Introspection & Verification
-        # ----------------------------------------------------
-        # Determine exact sequence length currently retained in cache tensors
-        if hasattr(past_key_values, "get_seq_length"):
-            cache_seq_len = past_key_values.get_seq_length()
-        elif hasattr(past_key_values, "layers") and past_key_values.layers[0].keys is not None:
-            cache_seq_len = past_key_values.layers[0].keys.shape[-2]
-        else:
-            cache_seq_len = input_tokens + max(0, generated_tokens - 1)
-
-        actual_kv_bytes, layers_measured, meta = calculate_kv_cache_bytes(past_key_values)
-        theo_kv_bytes = theoretical_kv_cache_bytes(
-            num_layers=self.num_layers,
-            num_kv_heads=self.num_kv_heads,
-            head_dim=self.head_dim,
-            element_size=self.element_size,
-            seq_len=cache_seq_len,
-            batch_size=1,
-        )
-
-        scaling_match = (
-            (1.0 - abs(actual_kv_bytes - theo_kv_bytes) / theo_kv_bytes) * 100.0
-            if theo_kv_bytes > 0
-            else 100.0
-        )
-
-        output_text = self.tokenizer.decode(generated_token_ids, skip_special_tokens=True)
-
+        r = run_generation(self, prompt, max_new_tokens, temperature, do_sample)
+        actual = r.pop("compressed_kv_bytes")
+        theo = r.pop("uncompressed_kv_bytes")
+        r.pop("kv_cache_savings_pct")
+        r.pop("actual_cached_tokens")
+        telemetry = r.pop("telemetry")
         return BaselineInferenceResult(
-            prompt=prompt,
-            output_text=output_text,
-            input_tokens=input_tokens,
-            generated_tokens=generated_tokens,
-            total_tokens=total_tokens,
-            prefill_time_ms=prefill_time_ms,
-            decode_time_ms=decode_time_ms,
-            total_time_ms=total_time_ms,
-            ttft_ms=ttft_ms,
-            decode_tokens_per_sec=decode_tokens_per_sec,
-            kv_cache_bytes=actual_kv_bytes,
-            kv_cache_mib=actual_kv_bytes / (1024**2),
-            theoretical_kv_bytes=theo_kv_bytes,
-            theoretical_kv_mib=theo_kv_bytes / (1024**2),
-            kv_scaling_match_pct=scaling_match,
-            peak_process_rss_mib=get_peak_rss_bytes() / (1024**2),
-            peak_device_allocated_mib=get_device_allocated_bytes(self.device) / (1024**2),
-            device=str(self.device),
-            model_name=self.model_name,
-            checkpoints=tracker.summary(),
-        )
+            prompt=prompt, **r, **telemetry, kv_cache_bytes=actual,
+            kv_cache_mib=actual / 1024**2, theoretical_kv_bytes=theo,
+            theoretical_kv_mib=theo / 1024**2,
+            kv_scaling_match_pct=100 * (1 - abs(actual - theo) / theo),
+            peak_process_rss_mib=get_peak_rss_bytes() / 1024**2,
+            peak_device_allocated_mib=checkpoint_device_mib(r["checkpoints"]),
+            device=str(self.device), model_name=self.model_name)
 
     def evaluate_scaling(
         self,

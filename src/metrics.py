@@ -12,6 +12,19 @@ import torch
 import psutil
 
 
+def synchronize_device(device: torch.device) -> None:
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    elif device.type == "mps":
+        torch.mps.synchronize()
+
+
+def checkpoint_device_mib(checkpoints: Dict[str, Any]) -> float:
+    """Maximum observed allocation, NOT a peak between checkpoints."""
+    return max((cp.get("device_allocated_mib", 0.0) for cp in checkpoints.values()
+                if isinstance(cp, dict)), default=0.0)
+
+
 def get_process_rss_bytes() -> int:
     """Return the current resident set size (RSS) of the process in bytes."""
     process = psutil.Process()
@@ -63,6 +76,7 @@ def calculate_kv_cache_bytes(past_key_values: Any) -> Tuple[int, int, Dict[str, 
         return 0, 0, {}
 
     total_bytes = 0
+    storages = {}
     layers_measured = 0
     layer_details: List[Dict[str, Any]] = []
 
@@ -74,6 +88,9 @@ def calculate_kv_cache_bytes(past_key_values: Any) -> Tuple[int, int, Dict[str, 
             if k is not None and v is not None:
                 k_bytes = k.numel() * k.element_size()
                 v_bytes = v.numel() * v.element_size()
+                for tensor in (k, v):
+                    storage = tensor.untyped_storage()
+                    storages[(str(tensor.device), storage.data_ptr())] = storage.nbytes()
                 layer_bytes = k_bytes + v_bytes
                 total_bytes += layer_bytes
                 layers_measured += 1
@@ -93,6 +110,9 @@ def calculate_kv_cache_bytes(past_key_values: Any) -> Tuple[int, int, Dict[str, 
                 if isinstance(k, torch.Tensor) and isinstance(v, torch.Tensor):
                     k_bytes = k.numel() * k.element_size()
                     v_bytes = v.numel() * v.element_size()
+                    for tensor in (k, v):
+                        storage = tensor.untyped_storage()
+                        storages[(str(tensor.device), storage.data_ptr())] = storage.nbytes()
                     layer_bytes = k_bytes + v_bytes
                     total_bytes += layer_bytes
                     layers_measured += 1
@@ -107,6 +127,7 @@ def calculate_kv_cache_bytes(past_key_values: Any) -> Tuple[int, int, Dict[str, 
 
     meta = {
         "layers_measured": layers_measured,
+        "storage_bytes": sum(storages.values()),
         "first_layer": layer_details[0] if layer_details else None
     }
     return total_bytes, layers_measured, meta

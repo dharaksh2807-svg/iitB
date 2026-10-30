@@ -24,6 +24,8 @@ class PureSlidingWindowEngine(StreamingLLMEngine):
         device: Optional[str] = None,
         dtype: torch.dtype = torch.float16,
         window_tokens: int = 256,
+        revision: Optional[str] = None,
+        attn_implementation: str = "sdpa",
     ):
         # Explicitly set sink_tokens = 0
         super().__init__(
@@ -32,6 +34,8 @@ class PureSlidingWindowEngine(StreamingLLMEngine):
             dtype=dtype,
             sink_tokens=0,
             window_tokens=window_tokens,
+            revision=revision,
+            attn_implementation=attn_implementation,
         )
 
     def prune_cache(self, past_key_values: Any) -> Tuple[Any, int]:
@@ -55,8 +59,8 @@ class PureSlidingWindowEngine(StreamingLLMEngine):
         # Pure sliding window slice: retain strictly the last W tokens
         for layer in past_key_values.layers:
             if layer.keys is not None and layer.values is not None:
-                layer.keys = layer.keys[..., -W:, :].contiguous()
-                layer.values = layer.values[..., -W:, :].contiguous()
+                layer.keys = layer.keys[..., -W:, :].clone()
+                layer.values = layer.values[..., -W:, :].clone()
 
         new_seq_len = past_key_values.layers[0].keys.shape[-2]
         return past_key_values, new_seq_len

@@ -11,7 +11,9 @@ import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
 from src.baseline import UncompressedBaselineEngine
+from src.generation import GenerationTelemetry, run_generation, cache_length, prefix_recent_indices, retain
 from src.metrics import (
+    checkpoint_device_mib,
     MemoryTracker,
     MemoryCheckpoint,
     calculate_kv_cache_bytes,
@@ -23,7 +25,7 @@ from src.metrics import (
 
 
 @dataclass
-class StreamingInferenceResult:
+class StreamingInferenceResult(GenerationTelemetry):
     prompt: str
     output_text: str
     input_tokens: int
@@ -60,11 +62,16 @@ class StreamingInferenceResult:
             "generated_tokens": self.generated_tokens,
             "actual_cached_tokens": self.actual_cached_tokens,
             "output_text": self.output_text,
+            "telemetry": {name: getattr(self, name) for name in GenerationTelemetry.__dataclass_fields__},
             "timings": {
+                "selection_time_ms": self.selection_time_ms,
+                "initial_selection_time_ms": self.initial_selection_time_ms,
+                "decode_pruning_time_ms": self.decode_pruning_time_ms,
+                "decode_forward_time_ms": self.decode_forward_time_ms,
                 "prefill_time_ms": round(self.prefill_time_ms, 2),
                 "decode_time_ms": round(self.decode_time_ms, 2),
                 "total_time_ms": round(self.total_time_ms, 2),
-                "ttft_ms": round(self.ttft_ms, 2),
+                "ttft_ms": round(self.ttft_ms, 2) if self.ttft_ms is not None else None,
                 "decode_tokens_per_sec": round(self.decode_tokens_per_sec, 2),
             },
             "memory": {
@@ -92,11 +99,16 @@ class StreamingLLMEngine(UncompressedBaselineEngine):
         dtype: torch.dtype = torch.float16,
         sink_tokens: int = 4,
         window_tokens: int = 256,
+        revision: Optional[str] = None,
+        attn_implementation: str = "sdpa",
     ):
-        super().__init__(model_name_or_path=model_name_or_path, device=device, dtype=dtype)
+        super().__init__(model_name_or_path=model_name_or_path, device=device, dtype=dtype,
+                         revision=revision, attn_implementation=attn_implementation)
         self.sink_tokens = sink_tokens
         self.window_tokens = window_tokens
         self.cache_budget = sink_tokens + window_tokens
+        if sink_tokens < 0 or window_tokens < 1:
+            raise ValueError("Require nonnegative sinks and positive recent window")
 
     def prune_cache(self, past_key_values: Any) -> Tuple[Any, int]:
         """
@@ -135,167 +147,19 @@ class StreamingLLMEngine(UncompressedBaselineEngine):
         new_seq_len = past_key_values.layers[0].keys.shape[-2]
         return past_key_values, new_seq_len
 
-    def generate(
-        self,
-        prompt: str,
-        max_new_tokens: int = 40,
-        temperature: float = 0.0,
-        do_sample: bool = False,
-    ) -> StreamingInferenceResult:
-        """
-        Executes StreamingLLM compressed autoregressive generation.
-        Separates prefill phase, performs post-prefill KV tensor eviction,
-        and bounds cache size during decoding via rolling eviction.
-        """
-        if self.model is None or self.tokenizer is None:
-            raise RuntimeError("Model is not loaded. Call load_model() first.")
+    def generate(self, prompt: str, max_new_tokens: int = 35,
+                 temperature: float = 0.0, do_sample: bool = False) -> StreamingInferenceResult:
+        def prune(cache):
+            indices = prefix_recent_indices(cache_length(cache), self.sink_tokens, self.window_tokens)
+            return retain(cache, indices), indices
 
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-        input_ids = inputs["input_ids"]
-        input_tokens = input_ids.shape[1]
-
-        if input_tokens > self.max_context_length:
-            raise ValueError(
-                f"Prompt length ({input_tokens} tokens) exceeds model maximum context ({self.max_context_length})."
-            )
-
-        tracker = MemoryTracker(self.device)
-        tracker.record("inference_start")
-
-        # Theoretical uncompressed size if no eviction took place
-        uncompressed_theo_bytes = theoretical_kv_cache_bytes(
-            num_layers=self.num_layers,
-            num_kv_heads=self.num_kv_heads,
-            head_dim=self.head_dim,
-            element_size=self.element_size,
-            seq_len=input_tokens + max_new_tokens,
-            batch_size=1,
-        )
-
-        # ----------------------------------------------------
-        # Phase 1: Prefill (Prompt Encoding)
-        # ----------------------------------------------------
-        self.sync_device()
-        t_prefill_start = time.perf_counter()
-
-        with torch.no_grad():
-            outputs = self.model(**inputs, use_cache=True)
-
-        self.sync_device()
-        t_prefill_end = time.perf_counter()
-        prefill_time_ms = (t_prefill_end - t_prefill_start) * 1000.0
-
-        past_key_values = outputs.past_key_values
-        tracker.record("peak_prefill_raw", past_key_values)
-
-        # ----------------------------------------------------
-        # Phase 2: Post-Prefill Real Cache Pruning
-        # ----------------------------------------------------
-        past_key_values, cached_seq_len = self.prune_cache(past_key_values)
-        tracker.record("post_prefill_pruned", past_key_values)
-
-        next_token_logits = outputs.logits[:, -1, :]
-        if do_sample and temperature > 0.0:
-            probs = torch.softmax(next_token_logits / temperature, dim=-1)
-            next_token = torch.multinomial(probs, num_samples=1)
-        else:
-            next_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-
-        ttft_ms = prefill_time_ms
-        generated_token_ids: List[int] = [int(next_token[0, 0].item())]
-        eos_token_id = self.tokenizer.eos_token_id
-
-        # ----------------------------------------------------
-        # Phase 3: Autoregressive Decoding Loop with Rolling Eviction
-        # ----------------------------------------------------
-        t_decode_start = time.perf_counter()
-        current_abs_pos = input_tokens
-
-        with torch.no_grad():
-            for step in range(max_new_tokens - 1):
-                if generated_token_ids[-1] == eos_token_id:
-                    break
-
-                # Explicitly pass true absolute position to maintain RoPE consistency
-                pos_ids = torch.tensor([[current_abs_pos]], device=self.device)
-
-                out_step = self.model(
-                    input_ids=next_token,
-                    position_ids=pos_ids,
-                    past_key_values=past_key_values,
-                    use_cache=True,
-                )
-                past_key_values = out_step.past_key_values
-
-                # Rolling eviction: ensure cache size does not exceed S + W
-                past_key_values, cached_seq_len = self.prune_cache(past_key_values)
-
-                step_logits = out_step.logits[:, -1, :]
-                if do_sample and temperature > 0.0:
-                    probs = torch.softmax(step_logits / temperature, dim=-1)
-                    next_token = torch.multinomial(probs, num_samples=1)
-                else:
-                    next_token = torch.argmax(step_logits, dim=-1, keepdim=True)
-
-                generated_token_ids.append(int(next_token[0, 0].item()))
-                current_abs_pos += 1
-
-        self.sync_device()
-        t_decode_end = time.perf_counter()
-        decode_time_ms = (t_decode_end - t_decode_start) * 1000.0
-        total_time_ms = prefill_time_ms + decode_time_ms
-
-        generated_tokens = len(generated_token_ids)
-        total_tokens = input_tokens + generated_tokens
-        decode_tokens_per_sec = (generated_tokens / (decode_time_ms / 1000.0)) if decode_time_ms > 0 else 0.0
-
-        tracker.record("post_decoding", past_key_values)
-
-        # ----------------------------------------------------
-        # Phase 4: Exact Compressed Cache Measurement
-        # ----------------------------------------------------
-        actual_kv_bytes, _, _ = calculate_kv_cache_bytes(past_key_values)
-
-        # Calculate exact baseline uncompressed bytes for this exact sequence length
-        uncompressed_bytes = theoretical_kv_cache_bytes(
-            num_layers=self.num_layers,
-            num_kv_heads=self.num_kv_heads,
-            head_dim=self.head_dim,
-            element_size=self.element_size,
-            seq_len=input_tokens + max(0, generated_tokens - 1),
-            batch_size=1,
-        )
-
-        savings_pct = (
-            (100.0 * (uncompressed_bytes - actual_kv_bytes) / uncompressed_bytes)
-            if uncompressed_bytes > 0
-            else 0.0
-        )
-
-        output_text = self.tokenizer.decode(generated_token_ids, skip_special_tokens=True)
-
+        r = run_generation(self, prompt, max_new_tokens, temperature, do_sample,
+                           select=lambda cache, attention, ids: prune(cache), prune=prune)
+        telemetry = r.pop("telemetry")
         return StreamingInferenceResult(
-            prompt=prompt,
-            output_text=output_text,
-            input_tokens=input_tokens,
-            generated_tokens=generated_tokens,
-            total_tokens=total_tokens,
-            sink_tokens=self.sink_tokens,
-            window_tokens=self.window_tokens,
-            cache_budget_tokens=self.cache_budget,
-            actual_cached_tokens=cached_seq_len,
-            prefill_time_ms=prefill_time_ms,
-            decode_time_ms=decode_time_ms,
-            total_time_ms=total_time_ms,
-            ttft_ms=ttft_ms,
-            decode_tokens_per_sec=decode_tokens_per_sec,
-            uncompressed_kv_bytes=uncompressed_bytes,
-            compressed_kv_bytes=actual_kv_bytes,
-            compressed_kv_mib=actual_kv_bytes / (1024**2),
-            kv_cache_savings_pct=savings_pct,
-            peak_process_rss_mib=get_peak_rss_bytes() / (1024**2),
-            peak_device_allocated_mib=get_device_allocated_bytes(self.device) / (1024**2),
-            device=str(self.device),
-            model_name=self.model_name,
-            checkpoints=tracker.summary(),
-        )
+            prompt=prompt, **r, **telemetry, sink_tokens=self.sink_tokens,
+            window_tokens=self.window_tokens, cache_budget_tokens=self.cache_budget,
+            compressed_kv_mib=r["compressed_kv_bytes"] / 1024**2,
+            peak_process_rss_mib=get_peak_rss_bytes() / 1024**2,
+            peak_device_allocated_mib=checkpoint_device_mib(r["checkpoints"]),
+            device=str(self.device), model_name=self.model_name)
