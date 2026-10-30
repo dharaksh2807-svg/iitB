@@ -145,7 +145,10 @@ def main(default_policies=POLICIES):
         raise ValueError("Dataset contains duplicate question ids")
     dataset_text = json.dumps(items, indent=2)
     (out / "dataset.json").write_text(dataset_text)
-    files = sorted(Path("src").glob("*.py")) + [Path(__file__)]
+    files = [Path("src") / f"{name}.py" for name in
+             ("baseline", "streaming_cache", "sliding_cache", "h2o_cache", "ogc_cache",
+              "generation", "selection", "metrics", "dataset", "research")]
+    files.append(Path(__file__))
     manifest = dict(config=vars(args), started_at=datetime.now().astimezone().isoformat(),
                     command=shlex.join([sys.executable, *sys.argv]),
                     git_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),

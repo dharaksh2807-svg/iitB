@@ -41,7 +41,7 @@ Autoregressive Large Language Models (LLMs) incur memory consumption that scales
 This repository provides an end-to-end, empirical research pipeline that investigates:
 1. **Uncompressed Reference Baseline:** Establishing exact theoretical and physical tensor memory scaling ($R^2 = 1.0000$).
 2. **First Existing Compression Technique (StreamingLLM):** Implementing physical Key/Value tensor slicing with attention sink preservation ($S=4$) and RoPE relative distance alignment.
-3. **Multi-Baseline Benchmarking:** Comparative evaluation against **Pure Sliding Window** ($S=0$) and **H2O (Heavy-Hitter Oracle)** dynamic token eviction ($H=64, W=196$).
+3. **Multi-Baseline Benchmarking:** Comparative evaluation against **Pure Sliding Window** ($S=0$) and an **H2O-style static prefill oracle approximation** ($H=64, W=196$).
 4. **Research Contribution — Observation-Guided Chunked Cache (OGC-Cache):** A query-directed chunk retention policy designed to overcome the critical **mid-context eviction blind spot** and **token fracturing** inherent in existing token-level eviction methods.
 5. **Interactive Demonstration & Benchmark Dashboard:** A dual-mode CLI and zero-dependency web dashboard reporting real physical tensor sizes and measured hardware latencies (no fabricated or theoretical numbers).
 
