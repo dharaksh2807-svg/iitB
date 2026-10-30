@@ -28,7 +28,7 @@ from src.research import build_cases, score, summarize
 
 POLICIES = ("full", "streaming", "sliding", "h2o_prefill_approx", "ogc", "query_tokens",
             "random_chunks", "adaptive_chunks", "entity_chunks")
-AVAILABLE_POLICIES = POLICIES + ("ogc_corrected", "entity_balanced", "ogc_c32", "ogc_history")
+AVAILABLE_POLICIES = POLICIES + ("ogc_corrected", "entity_balanced", "ogc_c32", "ogc_history", "entity_reserved")
 
 
 def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, prefill_chunk_size, seed,
@@ -54,7 +54,7 @@ def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, 
             elif policy == "h2o_prefill_approx":
                 engine = H2OCacheEngine(**common, heavy_hitters=history, recent_tokens=budget - history)
             else:
-                kept_history = int((budget-4)*modified_history_fraction) if policy in {"entity_balanced", "ogc_history"} else history
+                kept_history = int((budget-4)*modified_history_fraction) if policy in {"entity_balanced", "entity_reserved", "ogc_history"} else history
                 actual_chunk = 32 if policy == "ogc_c32" else chunk_size
                 # Fixed chunk grids (16/32/64) divide H at all matched budgets.
                 if kept_history % actual_chunk:
@@ -62,11 +62,12 @@ def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, 
                 engine = OGCCacheEngine(model_name=model, revision=revision, device=device, dtype=dtype,
                                         sink_tokens=4, recent_window=budget - 4 - kept_history,
                                         chunk_size=actual_chunk, num_chunks=kept_history // actual_chunk,
-                                        selection_policy="ogc" if policy in {"ogc_c32", "ogc_history"} else policy, seed=seed)
+                                        selection_policy=("ogc" if policy in {"ogc_c32", "ogc_history"} else "entity_balanced" if policy == "entity_reserved" else policy),
+                                        reserve_query_space=policy == "entity_reserved", seed=seed)
             name = f"{policy}/B{budget}"
             if policy in {"ogc", "random_chunks", "ogc_corrected", "ogc_c32", "ogc_history"}:
                 name += f"/C{32 if policy == 'ogc_c32' else chunk_size}"
-            if policy in {"entity_balanced", "ogc_history"}:
+            if policy in {"entity_balanced", "entity_reserved", "ogc_history"}:
                 name += f"/H{kept_history}"
             engines[name] = engine
     for engine in engines.values():
@@ -121,6 +122,8 @@ def record_result(result, item, config):
     for name in ("evaluation_protocol", "document_tokens", "query_tokens", "query_time_ms",
                  "query_forward_time_ms", "query_pruning_time_ms", "query_cache_lengths",
                  "document_retained_positions"):
+        row[name] = getattr(result, name)
+    for name in ("document_budget_tokens", "reserved_query_tokens", "document_kv_bytes"):
         row[name] = getattr(result, name)
     row.update(score(prediction, item["ground_truth_answers"]))
     return row

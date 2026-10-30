@@ -29,9 +29,17 @@ def verify(path):
         e=engines[r['config_name']];steps=r['decode_steps'];b=getattr(e,'cache_budget',getattr(e,'budget_tokens',n+steps))
         assert r['evaluation_protocol']==cfg['protocol']
         assert r['document_tokens']==doc and r['query_tokens']==n-doc
-        assert r['query_cache_lengths']==[min(doc+i,b) for i in range(n-doc+1)]
-        assert len(r['document_retained_positions'])==min(doc,b)
-        assert max(r['document_retained_positions'])<doc
+        doc_budget=r.get('document_budget_tokens')
+        doc_budget=b if doc_budget is None else doc_budget
+        reservation=min(n-doc,e.recent_window) if getattr(e,'reserve_query_space',False) else 0
+        assert r.get('reserved_query_tokens',0)==reservation
+        assert doc_budget==b-reservation
+        initial=min(doc,doc_budget)
+        assert r['query_cache_lengths']==[min(initial+i,b) for i in range(n-doc+1)]
+        assert len(r['document_retained_positions'])==initial
+        assert max(r['document_retained_positions'],default=-1)<doc
+        if 'document_kv_bytes' in r:assert r['document_kv_bytes']==initial*bpt
+        if r.get('reserved_query_tokens',0):assert doc_budget+r['reserved_query_tokens']==b
         assert r['cache_lengths']==[min(n+i,b) for i in range(steps+1)]
         pos=r['retained_positions'];assert pos==sorted(set(pos)) and pos[-1]==n+steps-1
         assert len(pos)==min(n+steps,b)==r['actual_cached_tokens']

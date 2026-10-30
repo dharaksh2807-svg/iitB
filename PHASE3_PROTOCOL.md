@@ -64,3 +64,28 @@ IDs and cache histories. Validate all artifacts independently before reporting.
 Preserve all earlier files and the pre-existing uncommitted Phase 2 report edit.
 Before pushing main, require remote HEAD to remain the recorded base above;
 otherwise stop without merge or force push.
+
+## Query-reservation correction and independent validation (V2)
+
+While the V1 runs were ongoing, a deterministic cache-window review identified a
+boundary defect: a complete record initially in the recent window can be evicted
+by the question itself, before token 1 is generated. A focused synthetic test
+reproduces loss of a four-token record, then verifies its full retention under
+reservation. V1's `entity_balanced` remains available unchanged; its runs and raw
+results are preserved. No V1 results are retuned or replaced.
+
+New opt-in `entity_reserved` uses the same scoring/record selection and H/W split,
+but reserves R=min(question_tokens,W) slots before document selection. Initial
+document retention is capped at B-R and uses W-R recent document slots; question
+processing fills the reservation under the same combined B cap. For questions
+longer than W, older question tokens can still roll out. Original policies are
+unchanged. Both initial document bytes and combined post-query bytes are saved.
+
+V2 validation is a new independent cohort, seed 2026110601: 60 questions at
+1K/2K, five depths, three types, two repetitions. Compare full, original OGC,
+unreserved record selection and reserved record selection, all at B=260.
+A fresh seed 2026110701 gives a 12-question 1K/2K/4K/8K budget pilot with these
+four policies at B=260/516/1028 (10 conditions). The reserved-policy success rule
+also requires no negative point change by depth, as well as the original paired
+lower-bound, context/type and EM conditions. V2 begins only after focused and
+pinned-model reservation tests pass. No further policy tuning on V2 results.

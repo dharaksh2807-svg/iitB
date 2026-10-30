@@ -42,7 +42,8 @@ class OGCCacheEngine(UncompressedBaselineEngine):
                  sink_tokens: int = 4, recent_window: int = 192,
                  chunk_size: int = 64, num_chunks: int = 1, query_window: int = 48,
                  device: Optional[str] = None, dtype: torch.dtype = torch.bfloat16,
-                 revision: Optional[str] = None, selection_policy: str = "ogc", seed: int = 42):
+                 revision: Optional[str] = None, selection_policy: str = "ogc", seed: int = 42,
+                 reserve_query_space: bool = False):
         super().__init__(model_name, device, dtype, revision=revision, attn_implementation="eager")
         if sink_tokens < 0 or min(recent_window, chunk_size, query_window) < 1 or num_chunks < 0:
             raise ValueError("Invalid sink/window/chunk/query configuration")
@@ -57,9 +58,12 @@ class OGCCacheEngine(UncompressedBaselineEngine):
         self._records = []
         self.selection_query = ""
         self.attention_score_correction = selection_policy in {"ogc_corrected", "entity_balanced"}
+        self.reserve_query_space = reserve_query_space
 
-    def _select_and_prune_cache(self, past_key_values: Any, attentions, seq_len: int):
-        if seq_len <= self.budget_tokens:
+    def _select_and_prune_cache(self, past_key_values: Any, attentions, seq_len: int, recent_window=None):
+        window = self.recent_window if recent_window is None else recent_window
+        document_budget = self.sink_tokens + self.chunk_size*self.num_chunks + window
+        if seq_len <= document_budget:
             self._last_indices = list(range(seq_len))
             return past_key_values, seq_len, []
         capacity = self.chunk_size * self.num_chunks
@@ -69,14 +73,14 @@ class OGCCacheEngine(UncompressedBaselineEngine):
             scores = observation_scores(attentions, seq_len, self.query_window, self.device,
                                         corrected=self.attention_score_correction)
         if self.selection_policy == "entity_balanced":
-            historical, ranges = select_records(scores, self.sink_tokens, seq_len-self.recent_window,
+            historical, ranges = select_records(scores, self.sink_tokens, seq_len-window,
                                                  capacity, self._records, self.selection_query)
         else:
             policy = "ogc" if self.selection_policy == "ogc_corrected" else self.selection_policy
-            historical, ranges = select_history(scores, self.sink_tokens, seq_len - self.recent_window,
+            historical, ranges = select_history(scores, self.sink_tokens, seq_len - window,
                                                  capacity, self.chunk_size, policy, self.seed,
                                                  self._boundaries, recency_ties=self.attention_score_correction)
-        indices = list(range(self.sink_tokens)) + historical + list(range(seq_len - self.recent_window, seq_len))
+        indices = list(range(self.sink_tokens)) + historical + list(range(seq_len-window, seq_len))
         self._last_indices = indices
         return retain(past_key_values, indices), len(indices), ranges
 
@@ -96,9 +100,12 @@ class OGCCacheEngine(UncompressedBaselineEngine):
                 self._boundaries = [i + 1 for i, token in enumerate(ids[0].tolist())
                                     if any(c in self.tokenizer.decode([token]) for c in (".", "!", "?", "\n"))]
             length = cache_length(cache)
-            history_selected = length > self.budget_tokens
+            reservation = min(getattr(self, "query_token_count", 0), self.recent_window) if self.reserve_query_space else 0
+            window = self.recent_window-reservation
+            self.document_cache_budget = self.budget_tokens-reservation
+            history_selected = length > self.document_cache_budget
             pending_scores = None if history_selected else attention
-            cache, _, selected_chunks = self._select_and_prune_cache(cache, attention, length)
+            cache, _, selected_chunks = self._select_and_prune_cache(cache, attention, length, recent_window=window)
             return cache, self._last_indices
 
         def prune(cache):

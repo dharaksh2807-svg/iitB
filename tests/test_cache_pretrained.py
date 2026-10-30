@@ -83,5 +83,25 @@ class PretrainedCorrectness(unittest.TestCase):
         self.assertEqual(result.compressed_kv_bytes, result.cache_storage_bytes)
 
 
+    def test_query_reservation_real_model_storage(self):
+        prompt = "The current deployment record is nominal. " * 100 + "Continue the report:"
+        engine = self.ogc(selection_policy="entity_balanced", reserve_query_space=True)
+        n = len(engine.tokenizer.encode(prompt))
+        engine.document_token_count = n-20
+        saved_eos = engine.tokenizer.eos_token_id
+        try:
+            engine.tokenizer.eos_token_id = None
+            with patch.object(engine.model.generation_config, "eos_token_id", None):
+                result = engine.generate(prompt, 100)
+        finally:
+            engine.tokenizer.eos_token_id = saved_eos
+        self.assertEqual(result.document_budget_tokens,240)
+        self.assertEqual(result.document_kv_bytes,240*28672)
+        self.assertEqual(result.query_cache_lengths,list(range(240,261)))
+        self.assertEqual(result.cache_lengths,[260]*100)
+        self.assertEqual(result.retained_positions[-1],n+98)
+        self.assertEqual(result.cache_storage_bytes,260*28672)
+
+
 if __name__ == "__main__":
     unittest.main()

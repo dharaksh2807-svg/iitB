@@ -24,6 +24,9 @@ class GenerationTelemetry:
     evaluation_protocol: str = "continuation"
     document_tokens: int = 0
     query_tokens: int = 0
+    document_budget_tokens: int | None = None
+    reserved_query_tokens: int = 0
+    document_kv_bytes: int = 0
     query_time_ms: float = 0.0
     query_forward_time_ms: float = 0.0
     query_pruning_time_ms: float = 0.0
@@ -92,6 +95,7 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
     if not 0 < doc_n <= n:
         raise ValueError("Document split must be inside the tokenized prompt")
     protocol = "held_query" if doc_n < n else "continuation"
+    engine.query_token_count = n-doc_n
     tracker = MemoryTracker(device)
     tracker.record("inference_start")
     if device.type == "cuda":
@@ -175,8 +179,11 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
     del scores  # selection input is a single accumulated score vector
     synchronize_device(device)
     initial_selection_ms = (time.perf_counter() - start) * 1000
-    tracker.record("post_prefill_pruned", cache)
+    document_bytes = tracker.record("post_prefill_pruned", cache).kv_cache_bytes
     budget = getattr(engine, "cache_budget", getattr(engine, "budget_tokens", None))
+    document_budget = getattr(engine, "document_cache_budget", budget)
+    if document_budget is not None and cache_length(cache)>document_budget:
+        raise AssertionError("Document selection exceeded its query-reserved budget")
     if budget is not None and cache_length(cache) > budget:
         raise AssertionError("Prefill pruning exceeded cache budget")
     document_positions = positions.copy()
@@ -280,6 +287,8 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
                 kv_cache_savings_pct=100 * (1 - actual / uncompressed),
                 checkpoints=tracker.summary(),
                 telemetry=dict(evaluation_protocol=protocol, document_tokens=doc_n, query_tokens=n-doc_n,
+                               document_budget_tokens=document_budget, document_kv_bytes=document_bytes,
+                               reserved_query_tokens=budget-document_budget if budget is not None else 0,
                                query_time_ms=query_ms, query_forward_time_ms=query_forward_ms,
                                query_pruning_time_ms=query_prune_ms, query_cache_lengths=query_lengths,
                                document_retained_positions=document_positions, scoring_time_ms=scoring_ms, prefill_forward_time_ms=prefill_forward_ms,

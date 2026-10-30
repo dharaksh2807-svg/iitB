@@ -119,11 +119,29 @@ class Phase3(unittest.TestCase):
 
     def test_query_eos_is_teacher_forced_not_answer_stop(self):
         e=self.engine();e.document_token_count=25
-        # Token 10 appears in the query; it must not stop teacher forcing.
-        with patch.object(self.model.generation_config,'eos_token_id',10):
+        # Token 30 appears early in the query; teacher forcing must continue afterward.
+        with patch.object(self.model.generation_config,'eos_token_id',30):
             r=e.generate(self.prompt,1)
         self.assertEqual(len(r.query_cache_lengths),16)
         self.assertEqual(len(r.generated_token_ids),1)
+
+    def test_reserved_query_cannot_evict_recent_record_before_answer(self):
+        spans=[(2,24,'irrelevant filler'),(24,28,'Record ITEM-123456 port zone'),(28,30,'tail')]
+        outputs=[]
+        for reserve in [False,True]:
+            e=self.engine(sink_tokens=2,recent_window=6,chunk_size=4,
+                          selection_policy='entity_balanced',reserve_query_space=reserve)
+            e.selection_query='Return ITEM-123456 port zone'
+            e.document_token_count=30
+            with patch('src.ogc_cache.record_spans',return_value=spans):
+                outputs.append(e.generate(self.prompt,1))
+        old,new=outputs
+        self.assertFalse(set(range(24,28)) & set(old.retained_positions))
+        self.assertTrue(set(range(24,28)).issubset(new.retained_positions))
+        self.assertEqual(new.document_budget_tokens,6)
+        self.assertEqual(new.reserved_query_tokens,6)
+        self.assertEqual(new.query_cache_lengths,[min(6+i,12) for i in range(11)])
+        self.assertEqual(new.retained_tokens,12)
 
     def test_invalid_split_and_matching_factory_budget(self):
         e=self.engine()
