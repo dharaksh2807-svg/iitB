@@ -28,9 +28,11 @@ from src.research import build_cases, score, summarize
 
 POLICIES = ("full", "streaming", "sliding", "h2o_prefill_approx", "ogc", "query_tokens",
             "random_chunks", "adaptive_chunks", "entity_chunks")
+AVAILABLE_POLICIES = POLICIES + ("ogc_corrected", "entity_balanced", "ogc_c32", "ogc_history")
 
 
-def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, prefill_chunk_size, seed):
+def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, prefill_chunk_size, seed,
+                 modified_history_fraction=0.5):
     common = dict(model_name_or_path=model, revision=revision, device=device, dtype=dtype,
                   attn_implementation="eager")
     engines = {}
@@ -52,17 +54,41 @@ def make_engines(model, revision, device, dtype, budgets, policies, chunk_size, 
             elif policy == "h2o_prefill_approx":
                 engine = H2OCacheEngine(**common, heavy_hitters=history, recent_tokens=budget - history)
             else:
+                kept_history = int((budget-4)*modified_history_fraction) if policy in {"entity_balanced", "ogc_history"} else history
+                actual_chunk = 32 if policy == "ogc_c32" else chunk_size
                 # Fixed chunk grids (16/32/64) divide H at all matched budgets.
-                if history % chunk_size:
+                if kept_history % actual_chunk:
                     raise ValueError("Chunk size must divide historical capacity")
                 engine = OGCCacheEngine(model_name=model, revision=revision, device=device, dtype=dtype,
-                                        sink_tokens=4, recent_window=budget - 4 - history,
-                                        chunk_size=chunk_size, num_chunks=history // chunk_size,
-                                        selection_policy=policy, seed=seed)
-            engines[f"{policy}/B{budget}/C{chunk_size}" if policy in {"ogc", "random_chunks"} else f"{policy}/B{budget}"] = engine
+                                        sink_tokens=4, recent_window=budget - 4 - kept_history,
+                                        chunk_size=actual_chunk, num_chunks=kept_history // actual_chunk,
+                                        selection_policy="ogc" if policy in {"ogc_c32", "ogc_history"} else policy, seed=seed)
+            name = f"{policy}/B{budget}"
+            if policy in {"ogc", "random_chunks", "ogc_corrected", "ogc_c32", "ogc_history"}:
+                name += f"/C{32 if policy == 'ogc_c32' else chunk_size}"
+            if policy in {"entity_balanced", "ogc_history"}:
+                name += f"/H{kept_history}"
+            engines[name] = engine
     for engine in engines.values():
         engine.prefill_chunk_size = prefill_chunk_size
     return engines
+
+
+def prepare_item(item, tokenizer, protocol):
+    if protocol == "held_query":
+        position = item["document"].rfind("[Inquiry]")
+        if position < 0:
+            raise ValueError("Held-query evaluation requires an explicit [Inquiry] boundary")
+        offsets = tokenizer(item["document"], return_offsets_mapping=True)["offset_mapping"]
+        item["document_token_count"] = next(i for i, (_, end) in enumerate(offsets) if end > position)
+        if not 0 < item["document_token_count"] < len(offsets):
+            raise ValueError("Empty document or question at held-query boundary")
+    return item
+
+
+def configure_item(engine, item, protocol):
+    engine.document_token_count = item.get("document_token_count") if protocol == "held_query" else None
+    engine.selection_query = item["question"]
 
 
 def record_result(result, item, config):
@@ -92,6 +118,10 @@ def record_result(result, item, config):
                retained_positions=result.retained_positions, cache_lengths=result.cache_lengths,
                memory_scope=result.memory_scope, cache_position_mode=result.cache_position_mode,
                checkpoints=checkpoints)
+    for name in ("evaluation_protocol", "document_tokens", "query_tokens", "query_time_ms",
+                 "query_forward_time_ms", "query_pruning_time_ms", "query_cache_lengths",
+                 "document_retained_positions"):
+        row[name] = getattr(result, name)
     row.update(score(prediction, item["ground_truth_answers"]))
     return row
 
@@ -104,7 +134,9 @@ def main(default_policies=POLICIES):
     parser.add_argument("--dtype", choices=["float16", "bfloat16", "float32"], default="bfloat16")
     parser.add_argument("--budgets", type=int, nargs="+", default=[260, 516, 1028])
     parser.add_argument("--lengths", type=int, nargs="+", default=[1024, 2048, 4096, 8192])
-    parser.add_argument("--policies", nargs="+", choices=POLICIES, default=default_policies)
+    parser.add_argument("--policies", nargs="+", choices=AVAILABLE_POLICIES, default=default_policies)
+    parser.add_argument("--protocol", choices=["continuation", "held_query"], default="continuation")
+    parser.add_argument("--modified-history-fraction", type=float, choices=[0.25, 0.5, 0.75], default=0.5)
     parser.add_argument("--repeats", type=int, default=5, help="Independent cases per length/depth/type cell; default 300 total")
     parser.add_argument("--seed", type=int, default=20261031)
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -143,6 +175,7 @@ def main(default_policies=POLICIES):
         items = items[:args.max_items]
     if len({item["item_id"] for item in items}) != len(items):
         raise ValueError("Dataset contains duplicate question ids")
+    items = [prepare_item(item, tokenizer, args.protocol) for item in items]
     dataset_text = json.dumps(items, indent=2)
     (out / "dataset.json").write_text(dataset_text)
     files = [Path("src") / f"{name}.py" for name in
@@ -164,7 +197,8 @@ def main(default_policies=POLICIES):
                     determinism=dict(algorithms=True, warn_only=True, fill_uninitialized_memory=False),
                     prefill_scope="full prompt KV; block attention; post-prefill pruning",
                     memory_note="MPS allocations are checkpoints, RSS peak is process lifetime; neither is a per-run peak. CUDA peak reset per question.",
-                    first_token_note="All policies use full-prefill logits for token 1. Recall includes this shared full-context information.",
+                    first_token_note=("Document compressed before any question token is forwarded; token 1 uses post-query logits. Query tokens count within B; selector may read question text lexically."
+                                      if args.protocol == "held_query" else "Token 1 uses full-prefill logits; historical continuation protocol."),
                     warmup="one 4-token generation per config on shortest evaluated document, excluded from results",
                     status="dataset_only" if args.build_only else "running")
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2))
@@ -172,7 +206,8 @@ def main(default_policies=POLICIES):
         print(f"Built {len(items)} cases in {out}; no inference performed", flush=True)
         return
     engines = make_engines(args.model, args.revision, args.device, getattr(torch, args.dtype),
-                           args.budgets, args.policies, args.chunk_size, args.prefill_chunk_size, args.seed)
+                           args.budgets, args.policies, args.chunk_size, args.prefill_chunk_size, args.seed,
+                           args.modified_history_fraction)
     # Share identical weights/tokenizer. Every policy reruns its own prefill and decode.
     owner = next(iter(engines.values()))
     try:
@@ -185,11 +220,12 @@ def main(default_policies=POLICIES):
             raise RuntimeError(f"Resolved cached snapshot differs: {resolved_revision}")
         manifest["resolved_revision"] = resolved_revision
         manifest["model_config_sha256"] = hashlib.sha256(config_path.read_bytes()).hexdigest()
-        warm_document = min(items, key=lambda item: item["actual_token_length"])["document"]
+        warm_item = min(items, key=lambda item: item["actual_token_length"])
         for engine in engines.values():
             engine.model, engine.tokenizer = owner.model, tokenizer
             engine.max_context_length = owner.max_context_length
-            engine.generate(warm_document, max_new_tokens=4)
+            configure_item(engine, warm_item, args.protocol)
+            engine.generate(warm_item["document"], max_new_tokens=4)
         print(f"Warmup complete: {len(engines)} configurations", flush=True)
     except BaseException as exc:
         manifest.update(status="failed_before_measurement", error=f"{type(exc).__name__}: {exc}",
@@ -208,6 +244,7 @@ def main(default_policies=POLICIES):
                     # Random-chunk draws are independent per document, reproducible across budgets.
                     if hasattr(engine, "seed"):
                         engine.seed = item["seed"] ^ args.seed
+                    configure_item(engine, item, args.protocol)
                     result = engine.generate(item["document"], args.max_new_tokens, do_sample=False)
                     row = record_result(result, item, config)
                     row["execution_index"] = len(records)
@@ -217,7 +254,7 @@ def main(default_policies=POLICIES):
                     records.append(row)
                 print(f"[{index+1}/{len(items)}] {len(records)} outputs persisted; L={item['actual_token_length']}", flush=True)
                 first_tokens = {row["generated_token_ids"][0] for row in records if row["item_id"] == item["item_id"]}
-                if len(first_tokens) != 1:
+                if args.protocol == "continuation" and len(first_tokens) != 1:
                     raise AssertionError("Identical prefill produced different first tokens across policies")
         (out / "summary.json").write_text(json.dumps(summarize(records), indent=2))
         manifest["status"] = "completed"

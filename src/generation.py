@@ -21,6 +21,14 @@ DEFAULT_REVISION = "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
 
 @dataclass(kw_only=True)
 class GenerationTelemetry:
+    evaluation_protocol: str = "continuation"
+    document_tokens: int = 0
+    query_tokens: int = 0
+    query_time_ms: float = 0.0
+    query_forward_time_ms: float = 0.0
+    query_pruning_time_ms: float = 0.0
+    query_cache_lengths: list[int] = field(default_factory=list)
+    document_retained_positions: list[int] = field(default_factory=list)
     scoring_time_ms: float = 0.0
     prefill_forward_time_ms: float = 0.0
     selection_time_ms: float = 0.0  # initial selection + pruning on all decode steps
@@ -79,6 +87,11 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
         raise ValueError("Prompt plus consumed generation tokens exceeds model context (or empty prompt)")
     if ids.shape[0] != 1 or not bool(inputs.get("attention_mask", torch.ones_like(ids)).all()):
         raise ValueError("Only one unpadded sequence is supported")
+    split = getattr(engine, "document_token_count", None)
+    doc_n = n if split is None else int(split)
+    if not 0 < doc_n <= n:
+        raise ValueError("Document split must be inside the tokenized prompt")
+    protocol = "held_query" if doc_n < n else "continuation"
     tracker = MemoryTracker(device)
     tracker.record("inference_start")
     if device.type == "cuda":
@@ -88,15 +101,17 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
     synchronize_device(device)
     start = time.perf_counter()
     cache = None
-    scores = torch.zeros(n, device=device, dtype=torch.float32) if capture_attentions else None
+    scores = torch.zeros(doc_n, device=device, dtype=torch.float32) if capture_attentions else None
+    corrected = getattr(engine, "attention_score_correction", False)
+    floors = {}
     block_size = getattr(engine, "prefill_chunk_size", 256)
     if block_size < 1:
         raise ValueError("prefill_chunk_size must be positive")
-    observation_start = max(0, n - getattr(engine, "query_window", n))
+    observation_start = max(0, doc_n - getattr(engine, "query_window", doc_n))
     scoring_ms = prefill_forward_ms = 0.0
     with torch.inference_mode():
-        for block_start in range(0, n, block_size):
-            end = min(n, block_start + block_size)
+        for block_start in range(0, doc_n, block_size):
+            end = min(doc_n, block_start + block_size)
             query_positions = torch.arange(block_start, end, device=device)
             # Absolute causal block mask; keys are still dense during prefill.
             allowed = torch.arange(end, device=device)[None, :] <= query_positions[:, None]
@@ -119,33 +134,84 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
                 if not output.attentions or any(a is None for a in output.attentions):
                     raise ValueError("Scoring requires an attention backend that returns weights")
                 offset = max(0, observation_start - block_start)
-                for attention in output.attentions:
-                    scores[:end] += attention[0, :, offset:, :].float().sum(dim=(0, 1))
+                for layer_index, attention in enumerate(output.attentions):
+                    observed = attention[0, :, offset:, :].float()
+                    scores[:end] += observed.sum(dim=(0, 1))
+                    if corrected:
+                        minimum = observed.amin(dim=1)
+                        if layer_index not in floors:
+                            floors[layer_index] = torch.zeros((minimum.shape[0], doc_n), device=device)
+                            floors[layer_index][:, :end] = minimum
+                        else:
+                            floors[layer_index][:, :end] = torch.minimum(floors[layer_index][:, :end], minimum)
+                        del minimum
+                    del observed
                 del attention
                 synchronize_device(device)
                 scoring_ms += (time.perf_counter() - scoring_start) * 1000
-            if end == n:
+            if end == doc_n:
                 logits = output.logits[:, -1, :].clone()
             del output  # at most one block of attention outputs remains live
+    if corrected and capture_attentions:
+        correction_start = time.perf_counter()
+        for floor in floors.values():
+            scores -= floor.sum(dim=0) * (doc_n - observation_start)
+        scores.clamp_min_(0)
+        synchronize_device(device)
+        scoring_ms += (time.perf_counter()-correction_start)*1000
+        del floors
+        del floor
     synchronize_device(device)
     prefill_ms = (time.perf_counter() - start) * 1000
     prefill_bytes = calculate_kv_cache_bytes(cache)[0]
     tracker.record("post_prefill", cache)
     tracker.record("peak_prefill_raw", cache)  # legacy name; checkpoint, NOT a true peak
-    positions = list(range(n))
+    positions = list(range(doc_n))
     synchronize_device(device)
     start = time.perf_counter()
     if select is not None:
-        cache, indices = select(cache, scores, ids)
+        cache, indices = select(cache, scores, ids[:, :doc_n])
         positions = [positions[i] for i in indices]
     del scores  # selection input is a single accumulated score vector
     synchronize_device(device)
     initial_selection_ms = (time.perf_counter() - start) * 1000
     tracker.record("post_prefill_pruned", cache)
-    lengths = [cache_length(cache)]
     budget = getattr(engine, "cache_budget", getattr(engine, "budget_tokens", None))
-    if budget is not None and lengths[-1] > budget:
+    if budget is not None and cache_length(cache) > budget:
         raise AssertionError("Prefill pruning exceeded cache budget")
+    document_positions = positions.copy()
+    query_lengths = [cache_length(cache)]
+    query_forward_ms = query_prune_ms = 0.0
+    synchronize_device(device)
+    query_start = time.perf_counter()
+    with torch.inference_mode():
+        for absolute in range(doc_n, n):
+            mask = torch.zeros((1, 1, 1, cache_length(cache)+1), device=device, dtype=engine.dtype)
+            kwargs = {"cache_position": torch.tensor([absolute], device=device)} if has_cache_position else {}
+            synchronize_device(device)
+            forward_start = time.perf_counter()
+            output = engine.model(input_ids=ids[:, absolute:absolute+1], past_key_values=cache,
+                                  position_ids=torch.tensor([[absolute]], device=device),
+                                  attention_mask=mask, use_cache=True, output_attentions=False, **kwargs)
+            synchronize_device(device)
+            query_forward_ms += (time.perf_counter()-forward_start)*1000
+            cache = output.past_key_values
+            positions.append(absolute)
+            prune_start = time.perf_counter()
+            if prune is not None:
+                cache, indices = prune(cache)
+                positions = [positions[i] for i in indices]
+            synchronize_device(device)
+            query_prune_ms += (time.perf_counter()-prune_start)*1000
+            query_lengths.append(cache_length(cache))
+            if len(positions) != cache_length(cache) or (budget is not None and len(positions)>budget):
+                raise AssertionError("Question processing exceeded cache budget")
+            logits = output.logits[:, -1, :].clone()  # replaces document logits before token 1
+            del output
+    synchronize_device(device)
+    query_ms = (time.perf_counter()-query_start)*1000 if n>doc_n else 0.0
+    tracker.record("post_query", cache)
+    lengths = [cache_length(cache)]
 
     def pick(scores):
         if do_sample:
@@ -158,7 +224,8 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
     generated = []
     ttft_ms = None
     if max_new_tokens:
-        next_token = pick(logits)  # the first token ALWAYS comes from prefill
+        # Held-query mode uses ONLY logits from the final post-compression query forward.
+        next_token = pick(logits)
         generated.append(int(next_token.item()))
         synchronize_device(device)
         ttft_ms = (time.perf_counter() - wall_start) * 1000
@@ -200,7 +267,7 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
     tracker.record("post_decoding", cache)
     actual, _, meta = calculate_kv_cache_bytes(cache)
     # Counterfactual full cache at the same consumed length, using observed bytes/token.
-    uncompressed = prefill_bytes // n * (n + steps)
+    uncompressed = prefill_bytes // doc_n * (n + steps)
     text = engine.tokenizer.decode(generated, skip_special_tokens=True)
     synchronize_device(device)
     total_ms = (time.perf_counter() - wall_start) * 1000
@@ -212,8 +279,11 @@ def run_generation(engine: Any, prompt: str, max_new_tokens: int, temperature: f
                 uncompressed_kv_bytes=uncompressed,
                 kv_cache_savings_pct=100 * (1 - actual / uncompressed),
                 checkpoints=tracker.summary(),
-                telemetry=dict(scoring_time_ms=scoring_ms, prefill_forward_time_ms=prefill_forward_ms,
-                               selection_time_ms=initial_selection_ms + prune_ms,
+                telemetry=dict(evaluation_protocol=protocol, document_tokens=doc_n, query_tokens=n-doc_n,
+                               query_time_ms=query_ms, query_forward_time_ms=query_forward_ms,
+                               query_pruning_time_ms=query_prune_ms, query_cache_lengths=query_lengths,
+                               document_retained_positions=document_positions, scoring_time_ms=scoring_ms, prefill_forward_time_ms=prefill_forward_ms,
+                               selection_time_ms=initial_selection_ms + query_prune_ms + prune_ms,
                                initial_selection_time_ms=initial_selection_ms,
                                decode_pruning_time_ms=prune_ms, decode_forward_time_ms=forward_ms,
                                decode_steps=steps, generated_token_ids=generated,

@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import torch
 from src.baseline import UncompressedBaselineEngine
 from src.generation import GenerationTelemetry, cache_length, prefix_recent_indices, retain, run_generation
-from src.selection import observation_scores, select_history
+from src.selection import observation_scores, select_history, record_spans, select_records
 
 @dataclass
 class OGCInferenceResult(GenerationTelemetry):
@@ -46,7 +46,7 @@ class OGCCacheEngine(UncompressedBaselineEngine):
         super().__init__(model_name, device, dtype, revision=revision, attn_implementation="eager")
         if sink_tokens < 0 or min(recent_window, chunk_size, query_window) < 1 or num_chunks < 0:
             raise ValueError("Invalid sink/window/chunk/query configuration")
-        if selection_policy not in {"ogc", "query_tokens", "random_chunks", "adaptive_chunks", "entity_chunks"}:
+        if selection_policy not in {"ogc", "query_tokens", "random_chunks", "adaptive_chunks", "entity_chunks", "ogc_corrected", "entity_balanced"}:
             raise ValueError("Unknown selection policy")
         self.sink_tokens, self.recent_window = sink_tokens, recent_window
         self.chunk_size, self.num_chunks = chunk_size, num_chunks
@@ -54,6 +54,9 @@ class OGCCacheEngine(UncompressedBaselineEngine):
         self.budget_tokens = sink_tokens + recent_window + chunk_size * num_chunks
         self._last_indices = []
         self._boundaries = []
+        self._records = []
+        self.selection_query = ""
+        self.attention_score_correction = selection_policy in {"ogc_corrected", "entity_balanced"}
 
     def _select_and_prune_cache(self, past_key_values: Any, attentions, seq_len: int):
         if seq_len <= self.budget_tokens:
@@ -63,10 +66,16 @@ class OGCCacheEngine(UncompressedBaselineEngine):
         if self.selection_policy == "random_chunks" or capacity == 0:
             scores = torch.zeros(seq_len)
         else:
-            scores = observation_scores(attentions, seq_len, self.query_window, self.device)
-        historical, ranges = select_history(scores, self.sink_tokens, seq_len - self.recent_window,
-                                             capacity, self.chunk_size, self.selection_policy,
-                                             self.seed, self._boundaries)
+            scores = observation_scores(attentions, seq_len, self.query_window, self.device,
+                                        corrected=self.attention_score_correction)
+        if self.selection_policy == "entity_balanced":
+            historical, ranges = select_records(scores, self.sink_tokens, seq_len-self.recent_window,
+                                                 capacity, self._records, self.selection_query)
+        else:
+            policy = "ogc" if self.selection_policy == "ogc_corrected" else self.selection_policy
+            historical, ranges = select_history(scores, self.sink_tokens, seq_len - self.recent_window,
+                                                 capacity, self.chunk_size, policy, self.seed,
+                                                 self._boundaries, recency_ties=self.attention_score_correction)
         indices = list(range(self.sink_tokens)) + historical + list(range(seq_len - self.recent_window, seq_len))
         self._last_indices = indices
         return retain(past_key_values, indices), len(indices), ranges
@@ -80,6 +89,8 @@ class OGCCacheEngine(UncompressedBaselineEngine):
         def select(cache, attention, ids):
             nonlocal selected_chunks, pending_scores, history_selected
             self._boundaries = []
+            if self.selection_policy == "entity_balanced":
+                self._records = record_spans(self.tokenizer, prompt, ids.shape[1])
             if self.selection_policy == "entity_chunks":
                 # Token-only punctuation boundaries; never benchmark answer offsets.
                 self._boundaries = [i + 1 for i, token in enumerate(ids[0].tolist())

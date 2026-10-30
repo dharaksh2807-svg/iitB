@@ -49,5 +49,39 @@ class PretrainedCorrectness(unittest.TestCase):
         self.assertEqual(result.retained_positions[-1], result.input_tokens + 98)
 
 
+    def test_held_query_first_token_matches_hf(self):
+        prompt = "Document: the port is 54321. Question: return the port. Answer:"
+        inputs = self.base.tokenizer(prompt, return_tensors="pt").to(self.base.device)
+        n = inputs.input_ids.shape[1]
+        with torch.inference_mode():
+            expected = self.base.model.generate(**inputs, max_new_tokens=12, do_sample=False,
+                                                repetition_penalty=1.0).tolist()[0][n:]
+        engine = self.ogc()
+        engine.document_token_count = n // 2
+        result = engine.generate(prompt, 12)
+        # BF16 batched vs tokenwise GEMMs can diverge at later near-tied logits.
+        # Full-sequence equivalence is independently covered with FP32 tiny Qwen2.
+        self.assertEqual(result.generated_token_ids[0], expected[0])
+        self.assertEqual(result.query_tokens, n-n//2)
+
+    def test_held_query_long_generation_real_storage(self):
+        prompt = "The current deployment record is nominal. " * 100 + "Continue the report:"
+        engine = self.ogc(selection_policy="entity_balanced")
+        n = len(engine.tokenizer.encode(prompt))
+        engine.document_token_count = n-20
+        saved_eos = engine.tokenizer.eos_token_id
+        try:
+            engine.tokenizer.eos_token_id = None
+            with patch.object(engine.model.generation_config, "eos_token_id", None):
+                result = engine.generate(prompt, 100)
+        finally:
+            engine.tokenizer.eos_token_id = saved_eos
+        self.assertEqual(result.query_cache_lengths, [260]*21)
+        self.assertEqual(result.cache_lengths, [260]*100)
+        self.assertEqual(result.retained_positions[-1], n+98)
+        self.assertEqual(result.compressed_kv_bytes, 260*28672)
+        self.assertEqual(result.compressed_kv_bytes, result.cache_storage_bytes)
+
+
 if __name__ == "__main__":
     unittest.main()
