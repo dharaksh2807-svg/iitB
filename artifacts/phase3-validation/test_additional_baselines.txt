@@ -1,0 +1,25 @@
+W1031 04:29:06.351000 65139 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.float16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:00<01:33,  3.59it/s]Loading weights:  72%|███████▏  | 243/338 [00:00<00:00, 797.04it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 366.54it/s]
+[BaselineEngine] Model loaded in 3.28s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 11162.88it/s]
+test_01_sliding_window_prunes_correctly (test_additional_baselines.TestAdditionalBaselines.test_01_sliding_window_prunes_correctly)
+Verify PureSlidingWindowEngine strictly keeps W tokens with S=0. ... ok
+test_02_h2o_cache_prunes_and_retains_heavy_hitters (test_additional_baselines.TestAdditionalBaselines.test_02_h2o_cache_prunes_and_retains_heavy_hitters)
+Verify H2OCacheEngine selects H heavy hitters and W recent tokens. ... ok
+test_03_inference_execution_both_engines (test_additional_baselines.TestAdditionalBaselines.test_03_inference_execution_both_engines)
+Verify end-to-end inference execution for both additional baselines. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 11.178s
+
+OK
+[BaselineEngine] Model loaded in 4.57s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+  -> test_01_sliding_window_prunes_correctly passed (3670016 bytes).
+  -> test_02_h2o_cache_prunes_and_retains_heavy_hitters passed (Token 42 in HH: True).
+  -> test_03_inference_execution_both_engines passed (SW: ' 12 + 18 = 30. Question: What', H2O: ' 12 + 18 = 20. Question: What').

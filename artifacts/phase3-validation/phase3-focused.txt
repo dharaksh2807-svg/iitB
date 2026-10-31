@@ -1,0 +1,41 @@
+W1031 04:25:16.731000 64294 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+test_absolute_positions_mask_and_exact_budget_for_long_decode (test_cache_correctness.CacheCorrectness.test_absolute_positions_mask_and_exact_budget_for_long_decode) ... ok
+test_all_policies_agree_with_hf_generate_when_no_pruning (test_cache_correctness.CacheCorrectness.test_all_policies_agree_with_hf_generate_when_no_pruning) ... ok
+test_baseline_scaling_check_is_independent_of_measured_bytes (test_cache_correctness.CacheCorrectness.test_baseline_scaling_check_is_independent_of_measured_bytes) ... ok
+test_benchmark_extracts_actual_bytes_and_nested_telemetry (test_cache_correctness.CacheCorrectness.test_benchmark_extracts_actual_bytes_and_nested_telemetry) ... ok
+test_block_prefill_matches_dense_logits_and_observation_scores (test_cache_correctness.CacheCorrectness.test_block_prefill_matches_dense_logits_and_observation_scores) ... ok
+test_budget_crossing_uses_pending_query_scores (test_cache_correctness.CacheCorrectness.test_budget_crossing_uses_pending_query_scores) ... ok
+test_compressed_other_policies_exact_budget_and_positions (test_cache_correctness.CacheCorrectness.test_compressed_other_policies_exact_budget_and_positions) ... ok
+test_explicit_cache_position_on_older_api_and_replaced_cache (test_cache_correctness.CacheCorrectness.test_explicit_cache_position_on_older_api_and_replaced_cache) ... ok
+test_first_token_is_prefill_argmax_and_prompt_not_repeated (test_cache_correctness.CacheCorrectness.test_first_token_is_prefill_argmax_and_prompt_not_repeated) ... ok
+test_matched_budget_selection_and_controls (test_cache_correctness.CacheCorrectness.test_matched_budget_selection_and_controls) ... ok
+test_nested_checkpoints_and_synchronization (test_cache_correctness.CacheCorrectness.test_nested_checkpoints_and_synchronization) ... ok
+test_newline_is_not_implicit_stop (test_cache_correctness.CacheCorrectness.test_newline_is_not_implicit_stop) ... ok
+test_pruning_does_not_rerotate_or_rebase_keys (test_cache_correctness.CacheCorrectness.test_pruning_does_not_rerotate_or_rebase_keys) ... ok
+test_repeatability_and_short_prompt_growing_past_budget (test_cache_correctness.CacheCorrectness.test_repeatability_and_short_prompt_growing_past_budget) ... ok
+test_storage_views_and_physical_pruning (test_cache_correctness.CacheCorrectness.test_storage_views_and_physical_pruning) ... ok
+test_timing_contains_selection_and_matches_step_definition (test_cache_correctness.CacheCorrectness.test_timing_contains_selection_and_matches_step_definition) ... ok
+test_zero_one_eos_and_context_limit (test_cache_correctness.CacheCorrectness.test_zero_one_eos_and_context_limit) ... ok
+test_boundaries_do_not_split_identifiers_or_decimals (test_phase3.Phase3.test_boundaries_do_not_split_identifiers_or_decimals) ... ok
+test_corrected_block_scores_equal_dense_across_window_boundary (test_phase3.Phase3.test_corrected_block_scores_equal_dense_across_window_boundary) ... ok
+test_first_answer_token_comes_from_pruned_query_forward (test_phase3.Phase3.test_first_answer_token_comes_from_pruned_query_forward) ... ok
+test_floor_subtraction_cancels_sink_not_salient_record (test_phase3.Phase3.test_floor_subtraction_cancels_sink_not_salient_record) ... FAIL
+test_held_query_no_pruning_matches_continuation_and_hf (test_phase3.Phase3.test_held_query_no_pruning_matches_continuation_and_hf) ... ok
+test_invalid_split_and_matching_factory_budget (test_phase3.Phase3.test_invalid_split_and_matching_factory_budget) ... ok
+test_long_query_and_decode_budget_shapes_positions_repeat (test_phase3.Phase3.test_long_query_and_decode_budget_shapes_positions_repeat) ... ok
+test_query_eos_is_teacher_forced_not_answer_stop (test_phase3.Phase3.test_query_eos_is_teacher_forced_not_answer_stop) ... ok
+test_whole_relationships_disperse_under_sink_noise (test_phase3.Phase3.test_whole_relationships_disperse_under_sink_noise) ... ok
+
+======================================================================
+FAIL: test_floor_subtraction_cancels_sink_not_salient_record (test_phase3.Phase3.test_floor_subtraction_cancels_sink_not_salient_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/dharaksh/Desktop/iitB/tests/test_phase3.py", line 48, in test_floor_subtraction_cancels_sink_not_salient_record
+    self.assertIn(20,e._last_indices);self.assertNotIn(4,e._last_indices)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 20 not found in [0, 1, 22, 23, 24, 25, 34, 35, 36, 37, 38, 39]
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.334s
+
+FAILED (failures=1)

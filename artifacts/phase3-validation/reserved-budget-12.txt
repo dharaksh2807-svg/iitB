@@ -1,0 +1,19 @@
+W1031 05:52:14.691000 72984 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 10253.32it/s]
+[BaselineEngine] Model loaded in 2.83s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+Warmup complete: 10 configurations
+[1/12] 10 outputs persisted; L=1024
+[2/12] 20 outputs persisted; L=1024
+[3/12] 30 outputs persisted; L=1025
+[4/12] 40 outputs persisted; L=2048
+[5/12] 50 outputs persisted; L=2049
+[6/12] 60 outputs persisted; L=2048
+[7/12] 70 outputs persisted; L=4096
+[8/12] 80 outputs persisted; L=4096
+[9/12] 90 outputs persisted; L=4096
+[10/12] 100 outputs persisted; L=8193
+[11/12] 110 outputs persisted; L=8192
+[12/12] 120 outputs persisted; L=8192

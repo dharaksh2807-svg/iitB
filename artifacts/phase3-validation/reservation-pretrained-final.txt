@@ -1,0 +1,16 @@
+W1031 05:38:34.277000 76565 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 10875.49it/s]
+test_held_query_first_token_matches_hf (test_cache_pretrained.PretrainedCorrectness.test_held_query_first_token_matches_hf) ... ok
+test_held_query_long_generation_real_storage (test_cache_pretrained.PretrainedCorrectness.test_held_query_long_generation_real_storage) ... ok
+test_long_decode_physical_budget_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_long_decode_physical_budget_and_first_token) ... ok
+test_no_pruning_agrees_with_hf_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_no_pruning_agrees_with_hf_and_first_token) ... ok
+test_query_reservation_real_model_storage (test_cache_pretrained.PretrainedCorrectness.test_query_reservation_real_model_storage) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 21.067s
+
+OK
+[BaselineEngine] Model loaded in 3.22s | Params: 1,543,714,304 | Weights: 2944.4 MiB

@@ -1,0 +1,23 @@
+W1031 04:28:53.048000 65094 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+test_absolute_positions_mask_and_exact_budget_for_long_decode (test_cache_correctness.CacheCorrectness.test_absolute_positions_mask_and_exact_budget_for_long_decode) ... ok
+test_all_policies_agree_with_hf_generate_when_no_pruning (test_cache_correctness.CacheCorrectness.test_all_policies_agree_with_hf_generate_when_no_pruning) ... ok
+test_baseline_scaling_check_is_independent_of_measured_bytes (test_cache_correctness.CacheCorrectness.test_baseline_scaling_check_is_independent_of_measured_bytes) ... ok
+test_benchmark_extracts_actual_bytes_and_nested_telemetry (test_cache_correctness.CacheCorrectness.test_benchmark_extracts_actual_bytes_and_nested_telemetry) ... ok
+test_block_prefill_matches_dense_logits_and_observation_scores (test_cache_correctness.CacheCorrectness.test_block_prefill_matches_dense_logits_and_observation_scores) ... ok
+test_budget_crossing_uses_pending_query_scores (test_cache_correctness.CacheCorrectness.test_budget_crossing_uses_pending_query_scores) ... ok
+test_compressed_other_policies_exact_budget_and_positions (test_cache_correctness.CacheCorrectness.test_compressed_other_policies_exact_budget_and_positions) ... ok
+test_explicit_cache_position_on_older_api_and_replaced_cache (test_cache_correctness.CacheCorrectness.test_explicit_cache_position_on_older_api_and_replaced_cache) ... ok
+test_first_token_is_prefill_argmax_and_prompt_not_repeated (test_cache_correctness.CacheCorrectness.test_first_token_is_prefill_argmax_and_prompt_not_repeated) ... ok
+test_matched_budget_selection_and_controls (test_cache_correctness.CacheCorrectness.test_matched_budget_selection_and_controls) ... ok
+test_nested_checkpoints_and_synchronization (test_cache_correctness.CacheCorrectness.test_nested_checkpoints_and_synchronization) ... ok
+test_newline_is_not_implicit_stop (test_cache_correctness.CacheCorrectness.test_newline_is_not_implicit_stop) ... ok
+test_pruning_does_not_rerotate_or_rebase_keys (test_cache_correctness.CacheCorrectness.test_pruning_does_not_rerotate_or_rebase_keys) ... ok
+test_repeatability_and_short_prompt_growing_past_budget (test_cache_correctness.CacheCorrectness.test_repeatability_and_short_prompt_growing_past_budget) ... ok
+test_storage_views_and_physical_pruning (test_cache_correctness.CacheCorrectness.test_storage_views_and_physical_pruning) ... ok
+test_timing_contains_selection_and_matches_step_definition (test_cache_correctness.CacheCorrectness.test_timing_contains_selection_and_matches_step_definition) ... ok
+test_zero_one_eos_and_context_limit (test_cache_correctness.CacheCorrectness.test_zero_one_eos_and_context_limit) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.163s
+
+OK

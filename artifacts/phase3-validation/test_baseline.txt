@@ -1,0 +1,25 @@
+W1031 04:28:55.010000 65104 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+
+[TestBaseline] Initializing UncompressedBaselineEngine...
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.float16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:00<02:20,  2.39it/s]Loading weights:  61%|██████    | 207/338 [00:00<00:00, 503.73it/s]Loading weights:  92%|█████████▏| 310/338 [00:01<00:00, 316.71it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 318.04it/s]
+test_01_model_architecture_and_parameters (test_baseline.TestBaselineInference.test_01_model_architecture_and_parameters)
+Verify model parameters match Qwen2.5-1.5B specs. ... ok
+test_02_kv_cache_formula_conformance (test_baseline.TestBaselineInference.test_02_kv_cache_formula_conformance)
+Verify that calculate_kv_cache_bytes matches theoretical formula exactly. ... ok
+test_03_baseline_generation_and_timing (test_baseline.TestBaselineInference.test_03_baseline_generation_and_timing)
+Verify uncompressed baseline generation produces valid output and distinct timings. ... ok
+test_04_prefill_and_decode_memory_checkpoints (test_baseline.TestBaselineInference.test_04_prefill_and_decode_memory_checkpoints)
+Verify memory checkpoints exist and distinguish phases. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.965s
+
+OK
+[BaselineEngine] Model loaded in 3.20s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+  -> test_01_model_architecture_and_parameters passed.
+  -> test_02_kv_cache_formula_conformance passed (Exact 2,867,200 bytes).
+  -> test_03_baseline_generation_and_timing passed. Output: '15 + 25 = 40. Question: What' | KV match: 100.00%
+  -> test_04_prefill_and_decode_memory_checkpoints passed.

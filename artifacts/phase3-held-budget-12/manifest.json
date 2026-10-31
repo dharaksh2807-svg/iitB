@@ -1,0 +1,90 @@
+{
+  "config": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+    "device": "mps",
+    "dtype": "bfloat16",
+    "budgets": [
+      260,
+      516,
+      1028
+    ],
+    "lengths": [
+      1024,
+      2048,
+      4096,
+      8192
+    ],
+    "policies": [
+      "full",
+      "streaming",
+      "sliding",
+      "h2o_prefill_approx",
+      "ogc",
+      "entity_balanced"
+    ],
+    "protocol": "held_query",
+    "modified_history_fraction": 0.5,
+    "repeats": 5,
+    "seed": 2026110501,
+    "chunk_size": 64,
+    "prefill_chunk_size": 256,
+    "max_new_tokens": 35,
+    "dataset": "artifacts/phase3-validation/budget-pilot-input.json",
+    "max_items": null,
+    "build_only": false,
+    "output": "artifacts/phase3-held-budget-12"
+  },
+  "started_at": "2026-10-31T05:16:43.671248+05:30",
+  "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --protocol held_query --seed 2026110501 --dataset artifacts/phase3-validation/budget-pilot-input.json --budgets 260 516 1028 --policies full streaming sliding h2o_prefill_approx ogc entity_balanced --output artifacts/phase3-held-budget-12",
+  "git_commit": "0c19a41511a8c468f37950ffc456a3ab2b4c66d5",
+  "git_status": " M PHASE2_TEST_REPORT.md\n?? PHASE3_RESEARCH_REPORT.md\n?? analyze_phase3.py\n?? artifacts/phase3-dev-continuation/\n?? artifacts/phase3-dev-held/\n?? artifacts/phase3-development-analysis/\n?? artifacts/phase3-held-60/\n?? artifacts/phase3-held-budget-12/\n?? artifacts/phase3-validation/\n",
+  "source_sha256": {
+    "src/baseline.py": "bd1304492d85524ecffec5b375ca4946ea197223440a669389c8d31d21ca76a5",
+    "src/streaming_cache.py": "e2bc54dacb4772afa6ab7c82dcbf90c4070112282353f18337bf6fa04bedb2b7",
+    "src/sliding_cache.py": "cf114570c67071cdbcad433733727ba61104d317309e61aa428ac5447f449f16",
+    "src/h2o_cache.py": "a3dd25360efa10691373f5aa1a998da12f0522c08784dea37176ec81a3cdca5d",
+    "src/ogc_cache.py": "233fd0facd5614cdbf8c7902fc618b6669e2b2e251d67cb890a77470fa6d28a0",
+    "src/generation.py": "f269450008fe465e35c029b5942b9e61e5a149c4fb7ebb27f1b163103b22c9b2",
+    "src/selection.py": "445d25b1c481b20d750d79c4a3c294397641b922d8ceafea862194ff22c073fc",
+    "src/metrics.py": "1ad15004396f0a281059323bf739746d66c2ac7722760b5acb8e73f840356f1f",
+    "src/dataset.py": "e374f9ed45eb35fbbeb12651f50901aee54d4c2f2f4340b193ad87ef2acc16e9",
+    "src/research.py": "dff81d9acac8f2c23512c949a7b5ed8b8ae48ae6f33f6158ea5813197fdc6440",
+    "/Users/dharaksh/Desktop/iitB/run_research_benchmark.py": "307d25b4551c5ba194ab52a7d1c785c6f84f039629452851dbca612764bfe92c"
+  },
+  "dataset_sha256": "89b1375d5dd89ccab8b8a73804e4b6c4c159138fcc0bd2c0936eb12aa642920d",
+  "python": "3.12.14 (main, Aug 12 2026, 13:57:54) [Clang 21.0.0 (clang-2100.1.1.101)]",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "versions": {
+    "torch": "2.14.1",
+    "transformers": "5.20.1",
+    "numpy": "2.5.4",
+    "tokenizers": "0.23.3",
+    "safetensors": "0.8.0"
+  },
+  "device": "mps",
+  "attention_backend": "eager",
+  "cases": 12,
+  "prompt_format": "dataset supplied verbatim",
+  "generation_settings": {
+    "do_sample": false,
+    "temperature": 0.0,
+    "repetition_penalty": 1.0,
+    "stop": "model/tokenizer EOS only; no implicit newline stop"
+  },
+  "determinism": {
+    "algorithms": true,
+    "warn_only": true,
+    "fill_uninitialized_memory": false
+  },
+  "prefill_scope": "full prompt KV; block attention; post-prefill pruning",
+  "memory_note": "MPS allocations are checkpoints, RSS peak is process lifetime; neither is a per-run peak. CUDA peak reset per question.",
+  "first_token_note": "Document compressed before any question token is forwarded; token 1 uses post-query logits. Query tokens count within B; selector may read question text lexically.",
+  "warmup": "one 4-token generation per config on shortest evaluated document, excluded from results",
+  "status": "completed",
+  "resolved_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "model_config_sha256": "98d2ff8cc47488d08a2b0b3acf4eb99ef210779b42bd48605f6b8e36acdbf670",
+  "outputs": 192,
+  "finished_at": "2026-10-31T05:38:27.869331+05:30"
+}

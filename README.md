@@ -9,6 +9,12 @@
 > for current evidence, limitations, and reproducible commands. H2O is a static
 > prefill oracle approximation, not dynamic H2O.
 
+> **Phase 3 targeted recall research:** See [the research report](PHASE3_RESEARCH_REPORT.md)
+> and [frozen protocol](PHASE3_PROTOCOL.md) for document → compress → question → answer
+> evaluation, opt-in record selection and query-space reservation, new raw outputs,
+> matched-budget comparisons and negative findings. Original defaults and historical
+> results remain available; retained-KV savings do not establish peak-memory savings.
+
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.14](https://img.shields.io/badge/PyTorch-2.14.1-ee4c2c.svg)](https://pytorch.org/)
 [![Transformers](https://img.shields.io/badge/Transformers-5.20.1-yellow.svg)](https://huggingface.co/docs/transformers)

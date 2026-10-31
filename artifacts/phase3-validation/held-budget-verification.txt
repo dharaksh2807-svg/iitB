@@ -1,0 +1,2 @@
+W1031 05:39:18.670000 76722 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+{"passed": true, "cases": 12, "outputs": 192, "protocol": "held_query", "bytes_per_token": 28672, "checks": "pairing, raw output decoding/scoring, document/query/decode budgets, original positions, physical bytes, timing decomposition"}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "scope": "Dataset independence only; does not assert inference completion. Shared synthetic templates remain a limitation.",
+  "unique_held_questions": 144,
+  "unique_case_seeds": 144,
+  "unique_document_hashes": 144,
+  "cohorts": {
+    "phase3-held-60": {
+      "cases": 60,
+      "dataset_sha256": "4d5c0f7e33ccc01926eb87675c070a0068708d201c0014aabf64c508e9b34f13"
+    },
+    "phase3-held-budget-12": {
+      "cases": 12,
+      "dataset_sha256": "89b1375d5dd89ccab8b8a73804e4b6c4c159138fcc0bd2c0936eb12aa642920d"
+    },
+    "phase3-reserved-held-60": {
+      "cases": 60,
+      "dataset_sha256": "35736338aeee0e26f24c3a691232af25e8c88bd9f623a84ec34a83c43fa1b4c5"
+    },
+    "phase3-reserved-budget-12": {
+      "cases": 12,
+      "dataset_sha256": "755ee7bd0d9e71cb39cc08e564dfe619cfdab07edf8a292bc89dbab490892983"
+    }
+  },
+  "overlap_against_previous_inputs": {
+    "phase3-dev-held": {
+      "id_overlap": 0,
+      "document_sha_overlap": 0
+    },
+    "phase2-matched-evaluation": {
+      "id_overlap": 0,
+      "document_sha_overlap": 0
+    }
+  }
+}

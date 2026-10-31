@@ -1,0 +1,622 @@
+{
+  "study": "artifacts/phase3-reserved-budget-12",
+  "protocol": "held_query",
+  "table": [
+    {
+      "config": "entity_balanced/B1028/H512",
+      "n": 12,
+      "correct": 9,
+      "recall_pct": 75.0,
+      "canonical_em_pct": 33.33333333333333,
+      "mean_kv_bytes": 29474816.0,
+      "mean_prefill_ms": 3267.6809548283927,
+      "mean_query_ms": 1733.3301701485955,
+      "mean_selection_ms": 384.4271229172591,
+      "mean_ttft_ms": 5020.765267438644,
+      "mean_decode_ms": 1007.3371422477067,
+      "mean_wall_ms": 6028.350277842644,
+      "by_context": {
+        "1024": 66.66666666666666,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 75.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 75.0
+      },
+      "sink_occupancy_eligible_cases": 9,
+      "mean_sink_adjacent_history_tokens": 50.111111111111114
+    },
+    {
+      "config": "entity_balanced/B260/H128",
+      "n": 12,
+      "correct": 10,
+      "recall_pct": 83.33333333333334,
+      "canonical_em_pct": 41.66666666666667,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 3308.6484861657177,
+      "mean_query_ms": 1560.2054583917682,
+      "mean_selection_ms": 382.5840378412977,
+      "mean_ttft_ms": 4890.951406239765,
+      "mean_decode_ms": 829.7660519989828,
+      "mean_wall_ms": 5720.936760383968,
+      "by_context": {
+        "1024": 100.0,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 100.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 100.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 16.5
+    },
+    {
+      "config": "entity_balanced/B516/H256",
+      "n": 12,
+      "correct": 9,
+      "recall_pct": 75.0,
+      "canonical_em_pct": 33.33333333333333,
+      "mean_kv_bytes": 14794752.0,
+      "mean_prefill_ms": 3237.5787255975106,
+      "mean_query_ms": 1636.7456424244058,
+      "mean_selection_ms": 412.4708133943689,
+      "mean_ttft_ms": 4899.264058845195,
+      "mean_decode_ms": 946.5102012424419,
+      "mean_wall_ms": 5846.010444336571,
+      "by_context": {
+        "1024": 66.66666666666666,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 25.0,
+        "middle": 100.0
+      },
+      "by_type": {
+        "adversarial": 25.0,
+        "multi_fact": 100.0,
+        "single_fact": 100.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 31.416666666666668
+    },
+    {
+      "config": "entity_reserved/B1028/H512",
+      "n": 12,
+      "correct": 9,
+      "recall_pct": 75.0,
+      "canonical_em_pct": 33.33333333333333,
+      "mean_kv_bytes": 29474816.0,
+      "mean_prefill_ms": 3198.7887080952837,
+      "mean_query_ms": 1702.7913680649363,
+      "mean_selection_ms": 169.00534462183714,
+      "mean_ttft_ms": 4921.541819513853,
+      "mean_decode_ms": 1001.4731424259177,
+      "mean_wall_ms": 5923.233486178408,
+      "by_context": {
+        "1024": 66.66666666666666,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 75.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 75.0
+      },
+      "sink_occupancy_eligible_cases": 9,
+      "mean_sink_adjacent_history_tokens": 49.55555555555556
+    },
+    {
+      "config": "entity_reserved/B260/H128",
+      "n": 12,
+      "correct": 10,
+      "recall_pct": 83.33333333333334,
+      "canonical_em_pct": 41.66666666666667,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 3282.8356770138876,
+      "mean_query_ms": 1581.6367604323507,
+      "mean_selection_ms": 144.45109017348537,
+      "mean_ttft_ms": 4890.927211837455,
+      "mean_decode_ms": 838.2314340851735,
+      "mean_wall_ms": 5729.396805652262,
+      "by_context": {
+        "1024": 100.0,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 100.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 100.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 17.5
+    },
+    {
+      "config": "entity_reserved/B516/H256",
+      "n": 12,
+      "correct": 10,
+      "recall_pct": 83.33333333333334,
+      "canonical_em_pct": 33.33333333333333,
+      "mean_kv_bytes": 14794752.0,
+      "mean_prefill_ms": 3260.475236156102,
+      "mean_query_ms": 1618.8351354115487,
+      "mean_selection_ms": 159.1734210087452,
+      "mean_ttft_ms": 4901.059701340273,
+      "mean_decode_ms": 960.6549375554702,
+      "mean_wall_ms": 5861.935812504574,
+      "by_context": {
+        "1024": 100.0,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 100.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 100.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 31.833333333333332
+    },
+    {
+      "config": "full",
+      "n": 12,
+      "correct": 10,
+      "recall_pct": 83.33333333333334,
+      "canonical_em_pct": 33.33333333333333,
+      "mean_kv_bytes": 110755157.33333333,
+      "mean_prefill_ms": 3225.75021883434,
+      "mean_query_ms": 1997.7027223503683,
+      "mean_selection_ms": 0.3147087409161031,
+      "mean_ttft_ms": 5229.137753349884,
+      "mean_decode_ms": 1218.042704994635,
+      "mean_wall_ms": 6447.477020594913,
+      "by_context": {
+        "1024": 100.0,
+        "2048": 100.0,
+        "4096": 66.66666666666666,
+        "8192": 66.66666666666666
+      },
+      "by_depth": {
+        "early_middle": 100.0,
+        "late_middle": 50.0,
+        "middle": 100.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 100.0,
+        "single_fact": 100.0
+      }
+    },
+    {
+      "config": "ogc/B1028/C64",
+      "n": 12,
+      "correct": 4,
+      "recall_pct": 33.33333333333333,
+      "canonical_em_pct": 8.333333333333332,
+      "mean_kv_bytes": 29474816.0,
+      "mean_prefill_ms": 3262.10829866856,
+      "mean_query_ms": 1755.2803438156843,
+      "mean_selection_ms": 401.81203302927315,
+      "mean_ttft_ms": 5031.9756284977,
+      "mean_decode_ms": 1094.7192463985023,
+      "mean_wall_ms": 6126.907534897327,
+      "by_context": {
+        "1024": 100.0,
+        "2048": 33.33333333333333,
+        "4096": 0.0,
+        "8192": 0.0
+      },
+      "by_depth": {
+        "early_middle": 25.0,
+        "late_middle": 50.0,
+        "middle": 25.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 25.0,
+        "single_fact": 25.0
+      },
+      "sink_occupancy_eligible_cases": 9,
+      "mean_sink_adjacent_history_tokens": 42.666666666666664
+    },
+    {
+      "config": "ogc/B260/C64",
+      "n": 12,
+      "correct": 2,
+      "recall_pct": 16.666666666666664,
+      "canonical_em_pct": 0.0,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 3237.325604170716,
+      "mean_query_ms": 1550.1234619199142,
+      "mean_selection_ms": 386.02657630690373,
+      "mean_ttft_ms": 4803.69348268141,
+      "mean_decode_ms": 902.6908541757924,
+      "mean_wall_ms": 5706.615701356593,
+      "by_context": {
+        "1024": 33.33333333333333,
+        "2048": 33.33333333333333,
+        "4096": 0.0,
+        "8192": 0.0
+      },
+      "by_depth": {
+        "early_middle": 0.0,
+        "late_middle": 50.0,
+        "middle": 0.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 0.0,
+        "single_fact": 0.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 0.0
+    },
+    {
+      "config": "ogc/B516/C64",
+      "n": 12,
+      "correct": 2,
+      "recall_pct": 16.666666666666664,
+      "canonical_em_pct": 0.0,
+      "mean_kv_bytes": 14794752.0,
+      "mean_prefill_ms": 3248.9326873231525,
+      "mean_query_ms": 1638.3340868342202,
+      "mean_selection_ms": 388.9071759088741,
+      "mean_ttft_ms": 4904.549420151549,
+      "mean_decode_ms": 844.6750000875909,
+      "mean_wall_ms": 5749.465986164675,
+      "by_context": {
+        "1024": 33.33333333333333,
+        "2048": 33.33333333333333,
+        "4096": 0.0,
+        "8192": 0.0
+      },
+      "by_depth": {
+        "early_middle": 0.0,
+        "late_middle": 50.0,
+        "middle": 0.0
+      },
+      "by_type": {
+        "adversarial": 50.0,
+        "multi_fact": 0.0,
+        "single_fact": 0.0
+      },
+      "sink_occupancy_eligible_cases": 12,
+      "mean_sink_adjacent_history_tokens": 26.666666666666668
+    }
+  ],
+  "contrasts_vs_original_ogc": {
+    "entity_balanced/B1028/H512": {
+      "all_facts": {
+        "delta_accuracy_pp": 41.666666666666664,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 25.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_balanced/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 66.66666666666667,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 41.666666666666664,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_balanced/B516/H256": {
+      "all_facts": {
+        "delta_accuracy_pp": 58.333333333333336,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 33.333333333333336,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_reserved/B1028/H512": {
+      "all_facts": {
+        "delta_accuracy_pp": 41.666666666666664,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 25.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_reserved/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 66.66666666666667,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 41.666666666666664,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_reserved/B516/H256": {
+      "all_facts": {
+        "delta_accuracy_pp": 66.66666666666667,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 33.333333333333336,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "ogc/B1028/C64": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "ogc/B260/C64": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "ogc/B516/C64": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    }
+  },
+  "contrasts_vs_unreserved_records": {
+    "entity_reserved/B516/H256": {
+      "all_facts": {
+        "delta_accuracy_pp": 8.333333333333334,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_reserved/B1028/H512": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    },
+    "entity_reserved/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": null,
+        "bootstrap_samples": 0,
+        "bootstrap_seed": 17,
+        "independent_pairs": 12,
+        "min_cases_per_stratum": 1,
+        "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+      }
+    }
+  },
+  "scoped_improvement_rule": {},
+  "plot_points": [
+    {
+      "config": "entity_balanced/B1028/H512",
+      "kv_mib": 28.109375,
+      "recall_pct": 75.0
+    },
+    {
+      "config": "entity_balanced/B260/H128",
+      "kv_mib": 7.109375,
+      "recall_pct": 83.33333333333334
+    },
+    {
+      "config": "entity_balanced/B516/H256",
+      "kv_mib": 14.109375,
+      "recall_pct": 75.0
+    },
+    {
+      "config": "entity_reserved/B1028/H512",
+      "kv_mib": 28.109375,
+      "recall_pct": 75.0
+    },
+    {
+      "config": "entity_reserved/B260/H128",
+      "kv_mib": 7.109375,
+      "recall_pct": 83.33333333333334
+    },
+    {
+      "config": "entity_reserved/B516/H256",
+      "kv_mib": 14.109375,
+      "recall_pct": 83.33333333333334
+    },
+    {
+      "config": "full",
+      "kv_mib": 105.62434895833333,
+      "recall_pct": 83.33333333333334
+    },
+    {
+      "config": "ogc/B1028/C64",
+      "kv_mib": 28.109375,
+      "recall_pct": 33.33333333333333
+    },
+    {
+      "config": "ogc/B260/C64",
+      "kv_mib": 7.109375,
+      "recall_pct": 16.666666666666664
+    },
+    {
+      "config": "ogc/B516/C64",
+      "kv_mib": 14.109375,
+      "recall_pct": 16.666666666666664
+    }
+  ],
+  "caveat": "Exploratory synthetic recall. No multiplicity adjustment. Singleton intervals withheld; plots show measured retained KV, not peak memory."
+}

@@ -1,0 +1,23 @@
+W1031 04:29:00.817000 65123 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+
+[TestStreamingLLM] Initializing StreamingLLMEngine (S=4, W=128)...
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.float16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:00<01:42,  3.29it/s]Loading weights:  75%|███████▌  | 255/338 [00:00<00:00, 783.17it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 327.35it/s]
+test_01_cache_pruning_physical_tensor_reduction (test_streaming_cache.TestStreamingLLMCache.test_01_cache_pruning_physical_tensor_reduction)
+Verify that prune_cache physically slices tensor shapes to S + W. ... ok
+test_02_streaming_inference_execution (test_streaming_cache.TestStreamingLLMCache.test_02_streaming_inference_execution)
+Verify StreamingLLM generation runs on real model and records savings. ... ok
+test_03_memory_checkpoints_show_pruning (test_streaming_cache.TestStreamingLLMCache.test_03_memory_checkpoints_show_pruning)
+Verify checkpoints explicitly record raw prefill peak vs post-prefill pruned memory. ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.883s
+
+OK
+[BaselineEngine] Model loaded in 3.05s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+  -> test_01_cache_pruning_physical_tensor_reduction passed. Pruned 500 -> 132 tokens (73.6% savings).
+  -> test_02_streaming_inference_execution passed. Savings: 70.07% | Output: '4
+You are an AI assistant. You'
+  -> test_03_memory_checkpoints_show_pruning passed. Raw prefill: 4.29 MiB -> Pruned: 3.61 MiB.

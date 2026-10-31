@@ -1,0 +1,197 @@
+{
+  "passed": true,
+  "created_utc": "2026-10-31T00:35:53.958973+00:00",
+  "inference_implementation_commit": "0c19a41511a8c468f37950ffc456a3ab2b4c66d5",
+  "distinct_passing_tests": 57,
+  "current_test_failures": 0,
+  "development_failures_preserved": [
+    "phase3-focused.txt",
+    "pretrained.txt"
+  ],
+  "remaining_parity_limit": "Strict 12-token BF16 held-query vs batched HF parity failed during development; first-token and tiny-FP32 full-sequence checks pass. Cause not isolated.",
+  "tests": [
+    {
+      "suite": "test_cache_correctness",
+      "passed": 17,
+      "seconds": 0.219,
+      "log": "artifacts/phase3-validation/query-reservation-regression.txt",
+      "log_sha256": "d9c8bbfcb48649d072500ca4ecb85c3107f520e8c58512de66d39d7c586f1253",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_cache_correctness.py -v"
+    },
+    {
+      "suite": "test_phase3",
+      "passed": 10,
+      "seconds": 0.21,
+      "log": "artifacts/phase3-validation/query-reservation-focused.txt",
+      "log_sha256": "3e07ed6da64075c91ddf9eda18246278f5512c0b4dab22b8e86bddc01e58ae26",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_phase3.py -v"
+    },
+    {
+      "suite": "test_research_benchmark",
+      "passed": 4,
+      "seconds": 0.143,
+      "log": "artifacts/phase3-validation/query-reservation-factory.txt",
+      "log_sha256": "6d27a1be827a8b25d6518b7e47b574db77ba35bc8d27e9f83a3798b651a20f34",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_research_benchmark.py -v"
+    },
+    {
+      "suite": "test_cache_pretrained",
+      "passed": 5,
+      "seconds": 21.067,
+      "log": "artifacts/phase3-validation/reservation-pretrained-final.txt",
+      "log_sha256": "084e051756b19cc45a152310135dfe21e7769b49abac3434923c9267e9b0b21e",
+      "command": "RUN_PRETRAINED_TESTS=1 .venv/bin/python -m unittest discover -s tests -p test_cache_pretrained.py -v"
+    },
+    {
+      "suite": "test_baseline",
+      "passed": 4,
+      "seconds": 4.788,
+      "log": "artifacts/phase3-validation/final-test_baseline.txt",
+      "log_sha256": "768c11201e433fc5391fbc64578047a2b8b93b9825bcf24af5cdd5c670c7a603",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_baseline.py -v"
+    },
+    {
+      "suite": "test_streaming_cache",
+      "passed": 3,
+      "seconds": 4.156,
+      "log": "artifacts/phase3-validation/final-test_streaming_cache.txt",
+      "log_sha256": "636390df0d9548eb2691e07cda52a77e191857bc18d841f4a667b54ad03a5f9a",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_streaming_cache.py -v"
+    },
+    {
+      "suite": "test_additional_baselines",
+      "passed": 3,
+      "seconds": 12.64,
+      "log": "artifacts/phase3-validation/final-test_additional_baselines.txt",
+      "log_sha256": "924e331863c176af50df217fe0267ec5ecd7fa77bb75b67b7f578f8ea9018713",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_additional_baselines.py -v"
+    },
+    {
+      "suite": "test_ogc_cache",
+      "passed": 3,
+      "seconds": 3.397,
+      "log": "artifacts/phase3-validation/final-test_ogc_cache.txt",
+      "log_sha256": "2ae5f2de1b11d1f0bcd626d50808d2cf26cb7226194abdf4c7691d44cb778410",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_ogc_cache.py -v"
+    },
+    {
+      "suite": "test_benchmark_dataset",
+      "passed": 4,
+      "seconds": 1.747,
+      "log": "artifacts/phase3-validation/final-test_benchmark_dataset.txt",
+      "log_sha256": "69de04f486319e9720528fea7cf33db616127a63c133fa6f4026d13e442fcc21",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_benchmark_dataset.py -v"
+    },
+    {
+      "suite": "test_demo",
+      "passed": 4,
+      "seconds": 6.894,
+      "log": "artifacts/phase3-validation/final-test_demo.txt",
+      "log_sha256": "bed5752ede5d0adadd5b1b4c1ca55b0c96e52f82eaf8f386ce9bff5ad1c2a122",
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_demo.py -v"
+    }
+  ],
+  "completed_experiments": [
+    {
+      "directory": "artifacts/phase3-dev-continuation",
+      "cases": 4,
+      "outputs": 28,
+      "protocol": "continuation",
+      "source_commit": "04f28215c92a189bcf251059d3213a88fa142855",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --dataset artifacts/phase3-validation/development-input.json --policies full ogc ogc_corrected entity_chunks entity_balanced ogc_c32 ogc_history --budgets 260 --output artifacts/phase3-dev-continuation",
+      "hashes": {
+        "manifest.json": "c39fa0e1f8ac91397606706d688ce61e35ff9446c524d1401b8f52334c6a2bb2",
+        "dataset.json": "593f2fd9eeae00bfc10ef93867e1b1311d7d5dac39d60a30fa7a8d7c1c2d2a8b",
+        "outputs.jsonl": "6f3ed930183730469b900c31ff9e409c51253a17d505004dd1daf211f3473197",
+        "verification.json": "b2c9c509423f28cf7c1e4cf83a90c0bb024b0658305b35bfd5fc1d010962c8d7"
+      }
+    },
+    {
+      "directory": "artifacts/phase3-dev-held",
+      "cases": 4,
+      "outputs": 28,
+      "protocol": "held_query",
+      "source_commit": "04f28215c92a189bcf251059d3213a88fa142855",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --dataset artifacts/phase3-validation/development-input.json --protocol held_query --policies full ogc ogc_corrected entity_chunks entity_balanced ogc_c32 ogc_history --budgets 260 --output artifacts/phase3-dev-held",
+      "hashes": {
+        "manifest.json": "8aac4f39e46acd5bd62c80e69cee9d7bed4a008719b332694904dea280602a11",
+        "dataset.json": "a59311b7ced98728b0e19d859763d1f6bb42af7d0d43479f3a43be0c8f5731f5",
+        "outputs.jsonl": "f29eade95e686d544fc3488b3c71e323f2c3c8c6b450ae0857fe4d2fdca8b7dc",
+        "verification.json": "75f8c5e94cec186e86482b9eecdd6f0bdc6520c4e8fa703c2b3d018029bdc25d"
+      }
+    },
+    {
+      "directory": "artifacts/phase3-held-60",
+      "cases": 60,
+      "outputs": 720,
+      "protocol": "held_query",
+      "source_commit": "14e2c62ab30133121a05113ccf106cbfe429541b",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --protocol held_query --seed 2026110401 --lengths 1024 2048 --repeats 2 --budgets 260 --policies full streaming sliding h2o_prefill_approx ogc ogc_corrected entity_chunks entity_balanced adaptive_chunks random_chunks ogc_c32 ogc_history --output artifacts/phase3-held-60",
+      "hashes": {
+        "manifest.json": "49b0f895abdc61558e792681eaf6f6b0ecc9828580711adfec3e488a631847b5",
+        "dataset.json": "4d5c0f7e33ccc01926eb87675c070a0068708d201c0014aabf64c508e9b34f13",
+        "outputs.jsonl": "674a4ce9fe538c1164e6cea3abb70d50c9492dd98a482167e139dc3b72856bc6",
+        "verification.json": "8e412aba69eeea4e25dfb5974861a2e0c05df4c20accf78ddcd4d5f9620d7a84"
+      }
+    },
+    {
+      "directory": "artifacts/phase3-held-budget-12",
+      "cases": 12,
+      "outputs": 192,
+      "protocol": "held_query",
+      "source_commit": "0c19a41511a8c468f37950ffc456a3ab2b4c66d5",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --protocol held_query --seed 2026110501 --dataset artifacts/phase3-validation/budget-pilot-input.json --budgets 260 516 1028 --policies full streaming sliding h2o_prefill_approx ogc entity_balanced --output artifacts/phase3-held-budget-12",
+      "hashes": {
+        "manifest.json": "a84f8bd903ca0ff7db37d40e0ad9ea9b901579cb4cf217ab4b225e2157ecafcb",
+        "dataset.json": "89b1375d5dd89ccab8b8a73804e4b6c4c159138fcc0bd2c0936eb12aa642920d",
+        "outputs.jsonl": "8022510fbf763f1a568dae9a55547840e4d622574f98eef70b993719525c8896",
+        "verification.json": "a707d53f04259e14e9b80ab2f67d34642ef43139fd6f7faed38940c74b7b5723"
+      }
+    },
+    {
+      "directory": "artifacts/phase3-reserved-held-60",
+      "cases": 60,
+      "outputs": 240,
+      "protocol": "held_query",
+      "source_commit": "0c19a41511a8c468f37950ffc456a3ab2b4c66d5",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --protocol held_query --seed 2026110601 --lengths 1024 2048 --repeats 2 --budgets 260 --policies full ogc entity_balanced entity_reserved --output artifacts/phase3-reserved-held-60",
+      "hashes": {
+        "manifest.json": "88172d0d143aa6456e28e4a7e733c32a1bf3573841088a58f483d308c5730ad5",
+        "dataset.json": "35736338aeee0e26f24c3a691232af25e8c88bd9f623a84ec34a83c43fa1b4c5",
+        "outputs.jsonl": "aca4c1dc5bf4962ca957c67e9cacc008cea025e946ac769bb35a07cc1415b03b",
+        "verification.json": "4637008eb8088673002660bf6da87c3b44aa4eb6b60742037dc3ed05e96bf34b"
+      }
+    },
+    {
+      "directory": "artifacts/phase3-reserved-budget-12",
+      "cases": 12,
+      "outputs": 120,
+      "protocol": "held_query",
+      "source_commit": "0c19a41511a8c468f37950ffc456a3ab2b4c66d5",
+      "command": "/Users/dharaksh/Desktop/iitB/.venv/bin/python run_research_benchmark.py --protocol held_query --seed 2026110701 --dataset artifacts/phase3-validation/reserved-budget-input.json --budgets 260 516 1028 --policies full ogc entity_balanced entity_reserved --output artifacts/phase3-reserved-budget-12",
+      "hashes": {
+        "manifest.json": "6881032188f96190e4dea6d107db13faa19325dbed7d6fd9188ad7cc72f89b1a",
+        "dataset.json": "755ee7bd0d9e71cb39cc08e564dfe619cfdab07edf8a292bc89dbab490892983",
+        "outputs.jsonl": "aa94a02172ce5e8007f7c552abe5ed966c84030c60d29c9d92563509b71da686",
+        "verification.json": "4842c2e2229388665dd11a15c06b2b8c01ea474be32c5a2fc22d302ce6d8031c"
+      }
+    }
+  ],
+  "total_outputs": 1328,
+  "unique_held_out_questions": 144,
+  "development_questions": 4,
+  "versions": {
+    "torch": "2.14.1",
+    "transformers": "5.20.1",
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "tokenizers": "0.23.3",
+    "safetensors": "0.8.0"
+  },
+  "analysis_sources_sha256": {
+    "analyze_phase3.py": "d687ea11af39112b9180cfa85e054308e58243fef66c51f7bb6421555055abae",
+    "verify_phase3.py": "e4e525dee9d13b71a4a2c80cefa9c09b6c9d0cc71f10414f2f04326b2318c80c",
+    "/Users/dharaksh/Desktop/iitB/artifacts/phase3-validation/adversarial_diagnostic.py": "d6f9cbfc71bdfd02348b6aa7c32df28c42f614a251191a99021db3111cb472d7"
+  },
+  "scientific_outcome": "Both fresh primary cohorts fail predeclared query-type consistency. Defaults unchanged. No measured peak-memory reduction."
+}

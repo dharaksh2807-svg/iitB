@@ -1,0 +1,280 @@
+{
+  "study": "artifacts/phase3-reserved-held-60",
+  "protocol": "held_query",
+  "table": [
+    {
+      "config": "entity_balanced/B260/H128",
+      "n": 60,
+      "correct": 46,
+      "recall_pct": 76.66666666666667,
+      "canonical_em_pct": 35.0,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 821.8132679835738,
+      "mean_query_ms": 1546.378323622048,
+      "mean_selection_ms": 379.19312667800114,
+      "mean_ttft_ms": 2383.773404014452,
+      "mean_decode_ms": 829.3205500483358,
+      "mean_wall_ms": 3213.310726295458,
+      "by_context": {
+        "1024": 83.33333333333334,
+        "2048": 70.0
+      },
+      "by_depth": {
+        "early_middle": 91.66666666666666,
+        "end": 33.33333333333333,
+        "late_middle": 66.66666666666666,
+        "middle": 91.66666666666666,
+        "start": 100.0
+      },
+      "by_type": {
+        "adversarial": 70.0,
+        "multi_fact": 80.0,
+        "single_fact": 80.0
+      },
+      "sink_occupancy_eligible_cases": 60,
+      "mean_sink_adjacent_history_tokens": 22.4
+    },
+    {
+      "config": "entity_reserved/B260/H128",
+      "n": 60,
+      "correct": 48,
+      "recall_pct": 80.0,
+      "canonical_em_pct": 43.333333333333336,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 840.3869062060645,
+      "mean_query_ms": 1541.4273799222428,
+      "mean_selection_ms": 128.8371758419089,
+      "mean_ttft_ms": 2397.4307923771753,
+      "mean_decode_ms": 782.4793610488996,
+      "mean_wall_ms": 3180.1279639301356,
+      "by_context": {
+        "1024": 80.0,
+        "2048": 80.0
+      },
+      "by_depth": {
+        "early_middle": 91.66666666666666,
+        "end": 50.0,
+        "late_middle": 75.0,
+        "middle": 91.66666666666666,
+        "start": 91.66666666666666
+      },
+      "by_type": {
+        "adversarial": 65.0,
+        "multi_fact": 85.0,
+        "single_fact": 90.0
+      },
+      "sink_occupancy_eligible_cases": 60,
+      "mean_sink_adjacent_history_tokens": 18.566666666666666
+    },
+    {
+      "config": "full",
+      "n": 60,
+      "correct": 50,
+      "recall_pct": 83.33333333333334,
+      "canonical_em_pct": 36.666666666666664,
+      "mean_kv_bytes": 44598818.13333333,
+      "mean_prefill_ms": 799.5374367999224,
+      "mean_query_ms": 1749.407770150962,
+      "mean_selection_ms": 0.3120119198380659,
+      "mean_ttft_ms": 2552.5494263798464,
+      "mean_decode_ms": 887.7465957445869,
+      "mean_wall_ms": 3440.553219418507,
+      "by_context": {
+        "1024": 80.0,
+        "2048": 86.66666666666667
+      },
+      "by_depth": {
+        "early_middle": 91.66666666666666,
+        "end": 83.33333333333334,
+        "late_middle": 66.66666666666666,
+        "middle": 91.66666666666666,
+        "start": 83.33333333333334
+      },
+      "by_type": {
+        "adversarial": 80.0,
+        "multi_fact": 85.0,
+        "single_fact": 85.0
+      }
+    },
+    {
+      "config": "ogc/B260/C64",
+      "n": 60,
+      "correct": 21,
+      "recall_pct": 35.0,
+      "canonical_em_pct": 8.333333333333332,
+      "mean_kv_bytes": 7454720.0,
+      "mean_prefill_ms": 847.8769277397078,
+      "mean_query_ms": 1550.9178332829226,
+      "mean_selection_ms": 370.1150122389663,
+      "mean_ttft_ms": 2412.3722811811604,
+      "mean_decode_ms": 779.5540410287989,
+      "mean_wall_ms": 3192.14569030446,
+      "by_context": {
+        "1024": 43.333333333333336,
+        "2048": 26.666666666666668
+      },
+      "by_depth": {
+        "early_middle": 33.33333333333333,
+        "end": 50.0,
+        "late_middle": 25.0,
+        "middle": 25.0,
+        "start": 41.66666666666667
+      },
+      "by_type": {
+        "adversarial": 80.0,
+        "multi_fact": 5.0,
+        "single_fact": 20.0
+      },
+      "sink_occupancy_eligible_cases": 60,
+      "mean_sink_adjacent_history_tokens": 5.333333333333333
+    }
+  ],
+  "contrasts_vs_original_ogc": {
+    "entity_balanced/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 41.666666666666664,
+        "paired_bootstrap_95_ci_pp": [
+          35.0,
+          48.333333333333336
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 26.666666666666668,
+        "paired_bootstrap_95_ci_pp": [
+          20.0,
+          33.333333333333336
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      }
+    },
+    "entity_reserved/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 45.0,
+        "paired_bootstrap_95_ci_pp": [
+          38.333333333333336,
+          53.333333333333336
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 35.0,
+        "paired_bootstrap_95_ci_pp": [
+          26.666666666666668,
+          43.333333333333336
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      }
+    },
+    "ogc/B260/C64": {
+      "all_facts": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 0.0,
+        "paired_bootstrap_95_ci_pp": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      }
+    }
+  },
+  "contrasts_vs_unreserved_records": {
+    "entity_reserved/B260/H128": {
+      "all_facts": {
+        "delta_accuracy_pp": 3.3333333333333335,
+        "paired_bootstrap_95_ci_pp": [
+          -1.6666666666666667,
+          8.333333333333334
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      },
+      "canonical_em": {
+        "delta_accuracy_pp": 8.333333333333334,
+        "paired_bootstrap_95_ci_pp": [
+          5.0,
+          11.666666666666666
+        ],
+        "bootstrap_samples": 2000,
+        "bootstrap_seed": 17,
+        "independent_pairs": 60,
+        "min_cases_per_stratum": 2,
+        "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+      }
+    }
+  },
+  "scoped_improvement_rule": {
+    "entity_balanced/B260/H128": {
+      "paired_lower_bound_positive": true,
+      "nonnegative_each_context": true,
+      "nonnegative_each_type": false,
+      "canonical_em_not_lower": true,
+      "passed": false
+    },
+    "entity_reserved/B260/H128": {
+      "paired_lower_bound_positive": true,
+      "nonnegative_each_context": true,
+      "nonnegative_each_type": false,
+      "canonical_em_not_lower": true,
+      "nonnegative_each_depth": true,
+      "passed": false
+    }
+  },
+  "plot_points": [
+    {
+      "config": "entity_balanced/B260/H128",
+      "kv_mib": 7.109375,
+      "recall_pct": 76.66666666666667
+    },
+    {
+      "config": "entity_reserved/B260/H128",
+      "kv_mib": 7.109375,
+      "recall_pct": 80.0
+    },
+    {
+      "config": "full",
+      "kv_mib": 42.53274739583333,
+      "recall_pct": 83.33333333333334
+    },
+    {
+      "config": "ogc/B260/C64",
+      "kv_mib": 7.109375,
+      "recall_pct": 35.0
+    }
+  ],
+  "caveat": "Exploratory synthetic recall. No multiplicity adjustment. Singleton intervals withheld; plots show measured retained KV, not peak memory."
+}

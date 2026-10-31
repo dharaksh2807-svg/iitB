@@ -1,0 +1,19 @@
+test_01_dataset_integrity_and_depth_coverage (test_benchmark_dataset.TestBenchmarkDataset.test_01_dataset_integrity_and_depth_coverage)
+Verify pilot and full benchmark datasets cover all 5 required document depths. ... ok
+test_02_ground_truth_presence_in_documents (test_benchmark_dataset.TestBenchmarkDataset.test_02_ground_truth_presence_in_documents)
+Verify that all ground-truth facts are embedded in document text without truncation. ... ok
+test_03_query_types_and_scoring_logic (test_benchmark_dataset.TestBenchmarkDataset.test_03_query_types_and_scoring_logic)
+Verify scoring logic handles single-fact and multi-fact queries deterministically. ... ok
+test_04_deterministic_generation_reproducibility (test_benchmark_dataset.TestBenchmarkDataset.test_04_deterministic_generation_reproducibility)
+Verify that identical seeds produce identical documents and ground truth. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.273s
+
+OK
+
+[TestDataset] Loading tokenizer and dataset files...
+  -> test_01_dataset_integrity_and_depth_coverage passed.
+  -> test_02_ground_truth_presence_in_documents passed (100% presence verified).
+  -> test_03_query_types_and_scoring_logic passed.
+  -> test_04_deterministic_generation_reproducibility passed.

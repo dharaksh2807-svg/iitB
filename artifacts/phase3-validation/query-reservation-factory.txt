@@ -1,0 +1,10 @@
+W1031 05:12:04.708000 71685 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+test_300_independently_seeded_cases_and_distributed_facts (test_research_benchmark.ResearchValidity.test_300_independently_seeded_cases_and_distributed_facts) ... ok
+test_all_matched_budgets_and_policy_settings (test_research_benchmark.ResearchValidity.test_all_matched_budgets_and_policy_settings) ... ok
+test_answer_boundaries_and_multifact_scoring (test_research_benchmark.ResearchValidity.test_answer_boundaries_and_multifact_scoring) ... ok
+test_paired_bootstrap_and_missing_pairs (test_research_benchmark.ResearchValidity.test_paired_bootstrap_and_missing_pairs) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.143s
+
+OK

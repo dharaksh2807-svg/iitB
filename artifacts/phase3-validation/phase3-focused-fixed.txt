@@ -1,0 +1,15 @@
+W1031 04:26:30.610000 64611 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+test_boundaries_do_not_split_identifiers_or_decimals (test_phase3.Phase3.test_boundaries_do_not_split_identifiers_or_decimals) ... ok
+test_corrected_block_scores_equal_dense_across_window_boundary (test_phase3.Phase3.test_corrected_block_scores_equal_dense_across_window_boundary) ... ok
+test_first_answer_token_comes_from_pruned_query_forward (test_phase3.Phase3.test_first_answer_token_comes_from_pruned_query_forward) ... ok
+test_floor_subtraction_cancels_sink_not_salient_record (test_phase3.Phase3.test_floor_subtraction_cancels_sink_not_salient_record) ... ok
+test_held_query_no_pruning_matches_continuation_and_hf (test_phase3.Phase3.test_held_query_no_pruning_matches_continuation_and_hf) ... ok
+test_invalid_split_and_matching_factory_budget (test_phase3.Phase3.test_invalid_split_and_matching_factory_budget) ... ok
+test_long_query_and_decode_budget_shapes_positions_repeat (test_phase3.Phase3.test_long_query_and_decode_budget_shapes_positions_repeat) ... ok
+test_query_eos_is_teacher_forced_not_answer_stop (test_phase3.Phase3.test_query_eos_is_teacher_forced_not_answer_stop) ... ok
+test_whole_relationships_disperse_under_sink_noise (test_phase3.Phase3.test_whole_relationships_disperse_under_sink_noise) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.177s
+
+OK

@@ -1,0 +1,67 @@
+W1031 05:38:57.613000 76620 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 12395.40it/s]
+[BaselineEngine] Model loaded in 2.79s | Params: 1,543,714,304 | Weights: 2944.4 MiB
+Warmup complete: 4 configurations
+[1/60] 4 outputs persisted; L=1023
+[2/60] 8 outputs persisted; L=1026
+[3/60] 12 outputs persisted; L=1024
+[4/60] 16 outputs persisted; L=1025
+[5/60] 20 outputs persisted; L=1024
+[6/60] 24 outputs persisted; L=1023
+[7/60] 28 outputs persisted; L=1024
+[8/60] 32 outputs persisted; L=1023
+[9/60] 36 outputs persisted; L=1024
+[10/60] 40 outputs persisted; L=1024
+[11/60] 44 outputs persisted; L=1024
+[12/60] 48 outputs persisted; L=1024
+[13/60] 52 outputs persisted; L=1024
+[14/60] 56 outputs persisted; L=1024
+[15/60] 60 outputs persisted; L=1024
+[16/60] 64 outputs persisted; L=2047
+[17/60] 68 outputs persisted; L=2049
+[18/60] 72 outputs persisted; L=2046
+[19/60] 76 outputs persisted; L=2047
+[20/60] 80 outputs persisted; L=2047
+[21/60] 84 outputs persisted; L=2048
+[22/60] 88 outputs persisted; L=2048
+[23/60] 92 outputs persisted; L=2046
+[24/60] 96 outputs persisted; L=2048
+[25/60] 100 outputs persisted; L=2049
+[26/60] 104 outputs persisted; L=2047
+[27/60] 108 outputs persisted; L=2048
+[28/60] 112 outputs persisted; L=2047
+[29/60] 116 outputs persisted; L=2047
+[30/60] 120 outputs persisted; L=2048
+[31/60] 124 outputs persisted; L=1025
+[32/60] 128 outputs persisted; L=1023
+[33/60] 132 outputs persisted; L=1024
+[34/60] 136 outputs persisted; L=1024
+[35/60] 140 outputs persisted; L=1024
+[36/60] 144 outputs persisted; L=1024
+[37/60] 148 outputs persisted; L=1023
+[38/60] 152 outputs persisted; L=1024
+[39/60] 156 outputs persisted; L=1025
+[40/60] 160 outputs persisted; L=1024
+[41/60] 164 outputs persisted; L=1024
+[42/60] 168 outputs persisted; L=1024
+[43/60] 172 outputs persisted; L=1023
+[44/60] 176 outputs persisted; L=1023
+[45/60] 180 outputs persisted; L=1023
+[46/60] 184 outputs persisted; L=2048
+[47/60] 188 outputs persisted; L=2049
+[48/60] 192 outputs persisted; L=2048
+[49/60] 196 outputs persisted; L=2048
+[50/60] 200 outputs persisted; L=2047
+[51/60] 204 outputs persisted; L=2048
+[52/60] 208 outputs persisted; L=2048
+[53/60] 212 outputs persisted; L=2049
+[54/60] 216 outputs persisted; L=2048
+[55/60] 220 outputs persisted; L=2047
+[56/60] 224 outputs persisted; L=2048
+[57/60] 228 outputs persisted; L=2048
+[58/60] 232 outputs persisted; L=2050
+[59/60] 236 outputs persisted; L=2048
+[60/60] 240 outputs persisted; L=2048

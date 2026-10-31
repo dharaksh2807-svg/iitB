@@ -1,0 +1,30 @@
+W1031 04:26:34.384000 64609 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[BaselineEngine] Initializing pre-load memory tracking on device: mps
+[BaselineEngine] Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+[BaselineEngine] Loading model weights (dtype=torch.bfloat16)
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 10894.46it/s]
+test_held_query_long_generation_real_storage (test_cache_pretrained.PretrainedCorrectness.test_held_query_long_generation_real_storage) ... ok
+test_held_query_unpruned_matches_hf (test_cache_pretrained.PretrainedCorrectness.test_held_query_unpruned_matches_hf) ... FAIL
+test_long_decode_physical_budget_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_long_decode_physical_budget_and_first_token) ... ok
+test_no_pruning_agrees_with_hf_and_first_token (test_cache_pretrained.PretrainedCorrectness.test_no_pruning_agrees_with_hf_and_first_token) ... ok
+
+======================================================================
+FAIL: test_held_query_unpruned_matches_hf (test_cache_pretrained.PretrainedCorrectness.test_held_query_unpruned_matches_hf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/dharaksh/Desktop/iitB/tests/test_cache_pretrained.py", line 62, in test_held_query_unpruned_matches_hf
+    self.assertEqual(result.generated_token_ids, expected)
+AssertionError: Lists differ: [220, 20, 19, 18, 17, 16, 198, 32, 13, 39970, 198, 33] != [220, 20, 19, 18, 17, 16, 13, 3555, 374, 279, 943, 315]
+
+First differing element 6:
+198
+13
+
+- [220, 20, 19, 18, 17, 16, 198, 32, 13, 39970, 198, 33]
++ [220, 20, 19, 18, 17, 16, 13, 3555, 374, 279, 943, 315]
+
+----------------------------------------------------------------------
+Ran 4 tests in 17.092s
+
+FAILED (failures=1)
+[BaselineEngine] Model loaded in 3.63s | Params: 1,543,714,304 | Weights: 2944.4 MiB

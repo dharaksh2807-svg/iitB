@@ -1,0 +1,407 @@
+{
+  "entity_balanced/B260/H128": {
+    "total": 4,
+    "accuracy_pct": 100.0,
+    "exact_match_pct": 50.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 382.522999541834,
+    "mean_scoring_time_ms": 7.265728723723441,
+    "mean_selection_time_ms": 116.84135475661606,
+    "mean_ttft_ms": 392.79219799209386,
+    "mean_decode_time_ms": 734.1007709910627,
+    "mean_total_time_ms": 1127.0962187554687,
+    "decode_tokens_per_sec": 26.222557938485476,
+    "paired_vs_full": {
+      "delta_accuracy_pp": 0.0,
+      "paired_bootstrap_95_ci_pp": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": true
+  },
+  "entity_chunks/B260": {
+    "total": 4,
+    "accuracy_pct": 75.0,
+    "exact_match_pct": 25.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 75.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 50.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 50.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 385.157062264625,
+    "mean_scoring_time_ms": 5.757094011642039,
+    "mean_selection_time_ms": 132.93368768063374,
+    "mean_ttft_ms": 398.10958300950006,
+    "mean_decode_time_ms": 828.3874369808473,
+    "mean_total_time_ms": 1226.7138750175945,
+    "decode_tokens_per_sec": 26.255830338603833,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -25.0,
+      "paired_bootstrap_95_ci_pp": [
+        -50.0,
+        0.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  },
+  "full": {
+    "total": 4,
+    "accuracy_pct": 100.0,
+    "exact_match_pct": 50.0,
+    "mean_kv_bytes": 29919232.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 29919232.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 29646848.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 30191616.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 29646848.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 30191616.0
+      }
+    },
+    "mean_prefill_time_ms": 374.8367602820508,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 0.10237548849545419,
+    "mean_ttft_ms": 377.24112503929064,
+    "mean_decode_time_ms": 780.0458959827665,
+    "mean_total_time_ms": 1157.5362290022895,
+    "decode_tokens_per_sec": 24.678035099136384,
+    "paired_vs_full": {
+      "delta_accuracy_pp": 0.0,
+      "paired_bootstrap_95_ci_pp": [
+        0.0,
+        0.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "pareto_nondominated": false
+  },
+  "ogc/B260/C64": {
+    "total": 4,
+    "accuracy_pct": 0.0,
+    "exact_match_pct": 0.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 378.53871876723133,
+    "mean_scoring_time_ms": 5.667427001753822,
+    "mean_selection_time_ms": 109.38763586455025,
+    "mean_ttft_ms": 386.84195798123255,
+    "mean_decode_time_ms": 683.6266667814925,
+    "mean_total_time_ms": 1070.6773432320915,
+    "decode_tokens_per_sec": 25.96446403058971,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -100.0,
+      "paired_bootstrap_95_ci_pp": [
+        -100.0,
+        -100.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  },
+  "ogc_c32/B260/C32": {
+    "total": 4,
+    "accuracy_pct": 0.0,
+    "exact_match_pct": 0.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 381.0296457668301,
+    "mean_scoring_time_ms": 5.791385512566194,
+    "mean_selection_time_ms": 117.58379140519537,
+    "mean_ttft_ms": 389.45208324003033,
+    "mean_decode_time_ms": 751.8459062557667,
+    "mean_total_time_ms": 1141.5227812540252,
+    "decode_tokens_per_sec": 25.60365074788535,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -100.0,
+      "paired_bootstrap_95_ci_pp": [
+        -100.0,
+        -100.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  },
+  "ogc_corrected/B260/C64": {
+    "total": 4,
+    "accuracy_pct": 0.0,
+    "exact_match_pct": 0.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 433.3430000115186,
+    "mean_scoring_time_ms": 45.69747901405208,
+    "mean_selection_time_ms": 110.87149937520735,
+    "mean_ttft_ms": 443.98894801270217,
+    "mean_decode_time_ms": 689.8880830267444,
+    "mean_total_time_ms": 1134.12000000244,
+    "decode_tokens_per_sec": 25.72881085599488,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -100.0,
+      "paired_bootstrap_95_ci_pp": [
+        -100.0,
+        -100.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  },
+  "ogc_history/B260/C64/H128": {
+    "total": 4,
+    "accuracy_pct": 0.0,
+    "exact_match_pct": 0.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 4,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "early_middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "multi_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "single_fact": {
+        "n": 2,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 379.1674062376842,
+    "mean_scoring_time_ms": 5.813041963847354,
+    "mean_selection_time_ms": 115.58466672431678,
+    "mean_ttft_ms": 387.9475627618376,
+    "mean_decode_time_ms": 732.7950417238753,
+    "mean_total_time_ms": 1120.9563957818318,
+    "decode_tokens_per_sec": 26.269282546883822,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -100.0,
+      "paired_bootstrap_95_ci_pp": [
+        -100.0,
+        -100.0
+      ],
+      "bootstrap_samples": 2000,
+      "bootstrap_seed": 17,
+      "independent_pairs": 4,
+      "min_cases_per_stratum": 2,
+      "caveat": "Synthetic benchmark only; no multiple-comparison adjustment"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  }
+}

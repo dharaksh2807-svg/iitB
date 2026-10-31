@@ -1,0 +1,42 @@
+{
+  "entity_balanced/B260/H128": {
+    "n": 20,
+    "is_correct": 14,
+    "obsolete_in_prediction": 5,
+    "initial_complete_current": 20,
+    "preanswer_complete_current": 18,
+    "preanswer_complete_obsolete": 20,
+    "final_complete_current": 18,
+    "incorrect_with_complete_current": 4
+  },
+  "entity_reserved/B260/H128": {
+    "n": 20,
+    "is_correct": 13,
+    "obsolete_in_prediction": 6,
+    "initial_complete_current": 20,
+    "preanswer_complete_current": 20,
+    "preanswer_complete_obsolete": 20,
+    "final_complete_current": 18,
+    "incorrect_with_complete_current": 7
+  },
+  "ogc/B260/C64": {
+    "n": 20,
+    "is_correct": 16,
+    "obsolete_in_prediction": 3,
+    "initial_complete_current": 17,
+    "preanswer_complete_current": 15,
+    "preanswer_complete_obsolete": 20,
+    "final_complete_current": 15,
+    "incorrect_with_complete_current": 1
+  },
+  "full": {
+    "n": 20,
+    "is_correct": 16,
+    "obsolete_in_prediction": 3,
+    "initial_complete_current": 20,
+    "preanswer_complete_current": 20,
+    "preanswer_complete_obsolete": 20,
+    "final_complete_current": 20,
+    "incorrect_with_complete_current": 4
+  }
+}

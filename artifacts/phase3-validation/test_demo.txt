@@ -1,0 +1,18 @@
+W1031 04:29:28.715000 65199 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+test_01_cli_dashboard_mode (test_demo.TestDemoCLIAndServer.test_01_cli_dashboard_mode)
+Tests that 'python demo.py --mode dashboard' runs cleanly and outputs metrics. ... ok
+test_02_cli_interactive_execution (test_demo.TestDemoCLIAndServer.test_02_cli_interactive_execution)
+Tests that 'python demo.py --mode interactive --preset 0' executes inference. ... ok
+test_03_server_static_and_preset_routes (test_demo.TestDemoCLIAndServer.test_03_server_static_and_preset_routes)
+Tests that the HTTP server handler serves static assets and API routes. ... ok
+test_04_server_benchmarks_route (test_demo.TestDemoCLIAndServer.test_04_server_benchmarks_route)
+Tests that /api/benchmarks returns the consolidated benchmark data. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 7.049s
+
+OK
+  -> test_01_cli_dashboard_mode passed.
+  -> test_02_cli_interactive_execution passed.
+  -> test_03_server_static_and_preset_routes passed (8 presets returned).
+  -> test_04_server_benchmarks_route passed.
