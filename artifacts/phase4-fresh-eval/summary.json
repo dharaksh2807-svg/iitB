@@ -1,0 +1,281 @@
+{
+  "entity_balanced/B260/H128": {
+    "total": 20,
+    "accuracy_pct": 80.0,
+    "exact_match_pct": 20.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 8,
+        "accuracy_pct": 75.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "2048": {
+        "n": 9,
+        "accuracy_pct": 88.88888888888889,
+        "mean_kv_bytes": 7454720.0
+      },
+      "4096": {
+        "n": 3,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "end": {
+        "n": 6,
+        "accuracy_pct": 50.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 7,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 7,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 14,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 6,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 908.9786479889881,
+    "mean_scoring_time_ms": 11.227181402500719,
+    "mean_selection_time_ms": 333.11409003217705,
+    "mean_ttft_ms": 2261.532449943479,
+    "mean_decode_time_ms": 788.1312728684861,
+    "mean_total_time_ms": 3049.8763769108336,
+    "decode_tokens_per_sec": 26.201218897001976,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -5.0,
+      "paired_bootstrap_95_ci_pp": null,
+      "bootstrap_samples": 0,
+      "bootstrap_seed": 17,
+      "independent_pairs": 20,
+      "min_cases_per_stratum": 1,
+      "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  },
+  "entity_reserved/B260/H128": {
+    "total": 20,
+    "accuracy_pct": 85.0,
+    "exact_match_pct": 30.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 8,
+        "accuracy_pct": 87.5,
+        "mean_kv_bytes": 7454720.0
+      },
+      "2048": {
+        "n": 9,
+        "accuracy_pct": 88.88888888888889,
+        "mean_kv_bytes": 7454720.0
+      },
+      "4096": {
+        "n": 3,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "end": {
+        "n": 6,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 7,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 7,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 14,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 6,
+        "accuracy_pct": 83.33333333333334,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 901.8909437640104,
+    "mean_scoring_time_ms": 11.500714754220098,
+    "mean_selection_time_ms": 123.96463462500833,
+    "mean_ttft_ms": 2181.6867831454147,
+    "mean_decode_time_ms": 747.7533874451183,
+    "mean_total_time_ms": 2929.6565146010835,
+    "decode_tokens_per_sec": 25.944382634339952,
+    "paired_vs_full": {
+      "delta_accuracy_pp": 0.0,
+      "paired_bootstrap_95_ci_pp": null,
+      "bootstrap_samples": 0,
+      "bootstrap_seed": 17,
+      "independent_pairs": 20,
+      "min_cases_per_stratum": 1,
+      "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": true
+  },
+  "full": {
+    "total": 20,
+    "accuracy_pct": 85.0,
+    "exact_match_pct": 30.0,
+    "mean_kv_bytes": 56331878.4,
+    "by_context_length": {
+      "1024": {
+        "n": 8,
+        "accuracy_pct": 87.5,
+        "mean_kv_bytes": 29901312.0
+      },
+      "2048": {
+        "n": 9,
+        "accuracy_pct": 88.88888888888889,
+        "mean_kv_bytes": 59185379.55555555
+      },
+      "4096": {
+        "n": 3,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 118252885.33333333
+      }
+    },
+    "by_depth_category": {
+      "end": {
+        "n": 6,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 59327146.666666664
+      },
+      "middle": {
+        "n": 7,
+        "accuracy_pct": 100.0,
+        "mean_kv_bytes": 55095296.0
+      },
+      "start": {
+        "n": 7,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 55001088.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 14,
+        "accuracy_pct": 85.71428571428571,
+        "mean_kv_bytes": 61478912.0
+      },
+      "multi_fact": {
+        "n": 6,
+        "accuracy_pct": 83.33333333333334,
+        "mean_kv_bytes": 44322133.333333336
+      }
+    },
+    "mean_prefill_time_ms": 918.8328792748507,
+    "mean_scoring_time_ms": 0.0,
+    "mean_selection_time_ms": 0.3206072316970676,
+    "mean_ttft_ms": 2381.6356750088744,
+    "mean_decode_time_ms": 853.1201417034026,
+    "mean_total_time_ms": 3234.97477286146,
+    "decode_tokens_per_sec": 22.505622668413224,
+    "paired_vs_full": {
+      "delta_accuracy_pp": 0.0,
+      "paired_bootstrap_95_ci_pp": null,
+      "bootstrap_samples": 0,
+      "bootstrap_seed": 17,
+      "independent_pairs": 20,
+      "min_cases_per_stratum": 1,
+      "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+    },
+    "pareto_nondominated": false
+  },
+  "ogc/B260/C64": {
+    "total": 20,
+    "accuracy_pct": 35.0,
+    "exact_match_pct": 5.0,
+    "mean_kv_bytes": 7454720.0,
+    "by_context_length": {
+      "1024": {
+        "n": 8,
+        "accuracy_pct": 25.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "2048": {
+        "n": 9,
+        "accuracy_pct": 33.33333333333333,
+        "mean_kv_bytes": 7454720.0
+      },
+      "4096": {
+        "n": 3,
+        "accuracy_pct": 66.66666666666666,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_depth_category": {
+      "end": {
+        "n": 6,
+        "accuracy_pct": 33.33333333333333,
+        "mean_kv_bytes": 7454720.0
+      },
+      "middle": {
+        "n": 7,
+        "accuracy_pct": 42.857142857142854,
+        "mean_kv_bytes": 7454720.0
+      },
+      "start": {
+        "n": 7,
+        "accuracy_pct": 28.57142857142857,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "by_query_type": {
+      "adversarial": {
+        "n": 14,
+        "accuracy_pct": 50.0,
+        "mean_kv_bytes": 7454720.0
+      },
+      "multi_fact": {
+        "n": 6,
+        "accuracy_pct": 0.0,
+        "mean_kv_bytes": 7454720.0
+      }
+    },
+    "mean_prefill_time_ms": 898.3819729357492,
+    "mean_scoring_time_ms": 9.658573009073734,
+    "mean_selection_time_ms": 322.92535150190815,
+    "mean_ttft_ms": 2271.708466648124,
+    "mean_decode_time_ms": 727.7669916395098,
+    "mean_total_time_ms": 2999.70222505508,
+    "decode_tokens_per_sec": 25.969850538868457,
+    "paired_vs_full": {
+      "delta_accuracy_pp": -50.0,
+      "paired_bootstrap_95_ci_pp": null,
+      "bootstrap_samples": 0,
+      "bootstrap_seed": 17,
+      "independent_pairs": 20,
+      "min_cases_per_stratum": 1,
+      "caveat": "Interval withheld: singleton strata cannot estimate within-stratum variance"
+    },
+    "paired_budget_controls": {},
+    "pareto_nondominated": false
+  }
+}
